@@ -1,13 +1,20 @@
 package entities;
 
 class Entity {
-    public var pos:Vector;
+    public var rect:Rect;
 
-    public function new(_x:Float, _y:Float) {
-        pos = new Vector(_x, _y);
+    public var dead:Bool = false;
+
+    //:todo: maybe use a Vector object here?
+    public function new(_x:Float, _y:Float, _w:Float, _h:Float) {
+        rect = new Rect(_x, _y, _w, _h);
     }
 
-    public function draw() { }
+    public function draw():Void { }
 
-    public function update(dt:Float) { }
+    public function update(dt:Float):Void { }
+
+    public function destroy() {
+        rect = null;
+    }
 }

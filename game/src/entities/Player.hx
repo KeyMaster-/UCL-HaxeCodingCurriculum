@@ -1,56 +1,44 @@
 package entities;
 
 class Player extends Entity {
-    public var width(default, null):Int = 100;
-    public var height(default, null):Int = 30;
     var speed:Float = 200;
 
     var last_shot_time:Float = 0;
-    var shot_delay:Float = 0.1;
+    var shot_delay:Float = 0.2;
     var bullets:Array<Bullet>;
 
 
-    public function new(_x:Float, _y:Float) {
-        super(_x, _y);
-        bullets = [];
+    public function new(_x:Float, _y:Float, _bullets:Array<Bullet>) {
+        super(_x, _y, 100, 30);
+        bullets = _bullets;
     }
 
     override public function draw() {
-        Framework.vis.box(pos.x, pos.y, width, height);
-        var i:Int = 0;
-        while(i < bullets.length) {
-            var bullet = bullets[i];
-            if(bullet.dead == true) {
-                bullets.remove(bullet);
-                continue;
-            }
-            bullet.draw();
-            i++;
-        }
+        Framework.vis.box(rect.x, rect.y, rect.w, rect.h);
     }
 
     override public function update(dt:Float) {
         if(Framework.input.keydown(39)) { //right
-            pos.x += speed * dt;
+            rect.x += speed * dt;
         }
         else if(Framework.input.keydown(37)) { //left
-            pos.x -= speed * dt;
+            rect.x -= speed * dt;
         }
 
         if(Framework.input.keydown(38)) { //up
-            pos.y -= speed * dt;
+            rect.y -= speed * dt;
         }
         else if(Framework.input.keydown(40)) {
-            pos.y += speed * dt;
+            rect.y += speed * dt;
         }
 
-        pos.x = clamp(pos.x, 0, Framework.vis.canvas_width - width);
-        pos.y = clamp(pos.y, 0, Framework.vis.canvas_height - height);
+        rect.x = clamp(rect.x, 0, Framework.vis.canvas_width - rect.w);
+        rect.y = clamp(rect.y, 0, Framework.vis.canvas_height - rect.h);
 
         if(Framework.input.keydown(32)) {
             if(Framework.time - last_shot_time > shot_delay) {
-                var bullet = new Bullet(pos.x + width, pos.y + height / 2, 500, 0);
-                bullet.pos.y -= bullet.size / 2;
+                var bullet = new Bullet(rect.x + rect.w, rect.y + rect.h / 2, 500, 0);
+                bullet.rect.y -= bullet.size / 2;
                 bullets.push(bullet);
                 last_shot_time = Framework.time;
             }

@@ -19,10 +19,12 @@ class Vis {
         //:todo: focus change
     }
 
+
     public function onresize() {
+
         canvas.width = Browser.window.innerWidth;
         canvas.height = Browser.window.innerHeight;
-        // trace('on resize ${canvas.height} ${canvas.width}');
+        // ctx.scale(canvas.width / 1000, canvas.height / 1000); :todo: Fix virtual screen size?
     }
 
     public function box(x:Float, y:Float, w:Float, h:Float, col = '#ffffff') {
