@@ -7,14 +7,18 @@ class Player extends Entity {
     var shot_delay:Float = 0.2;
     var bullets:Array<Bullet>;
 
+    var image:Int;
+
 
     public function new(_x:Float, _y:Float, _bullets:Array<Bullet>) {
         super(_x, _y, 100, 30);
         bullets = _bullets;
+        image = Framework.vis.image_id('player_ship');
     }
 
     override public function draw() {
-        Framework.vis.box(rect.x, rect.y, rect.w, rect.h);
+        // Framework.vis.box(rect.x, rect.y, rect.w, rect.h);
+        Framework.vis.image(image, rect.x, rect.y);
     }
 
     override public function update(dt:Float) {

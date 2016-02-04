@@ -89,6 +89,16 @@ Game.prototype = {
 		}
 	}
 };
+var HxOverrides = function() { };
+HxOverrides.substr = function(s,pos,len) {
+	if(pos != null && pos != 0 && len != null && len < 0) return "";
+	if(len == null) len = s.length;
+	if(pos < 0) {
+		pos = s.length + pos;
+		if(pos < 0) pos = 0;
+	} else if(len < 0) len = s.length + len - pos;
+	return s.substr(pos,len);
+};
 var Main = function() { };
 Main.main = function() {
 	new Framework();
@@ -180,11 +190,12 @@ var entities_Player = function(_x,_y,_bullets) {
 	this.speed = 200;
 	entities_Entity.call(this,_x,_y,100,30);
 	this.bullets = _bullets;
+	this.image = Framework.vis.image_id("player_ship");
 };
 entities_Player.__super__ = entities_Entity;
 entities_Player.prototype = $extend(entities_Entity.prototype,{
 	draw: function() {
-		Framework.vis.box(this.rect.x,this.rect.y,this.rect.w,this.rect.h);
+		Framework.vis.image(this.image,this.rect.x,this.rect.y);
 	}
 	,update: function(dt) {
 		if(Framework.input.keydown(39)) this.rect.x += this.speed * dt; else if(Framework.input.keydown(37)) this.rect.x -= this.speed * dt;
@@ -216,6 +227,67 @@ var haxe_ds_IntMap = function() {
 	this.h = { };
 };
 haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
+var haxe_ds_StringMap = function() {
+	this.h = { };
+};
+haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
+haxe_ds_StringMap.prototype = {
+	set: function(key,value) {
+		if(__map_reserved[key] != null) this.setReserved(key,value); else this.h[key] = value;
+	}
+	,get: function(key) {
+		if(__map_reserved[key] != null) return this.getReserved(key);
+		return this.h[key];
+	}
+	,setReserved: function(key,value) {
+		if(this.rh == null) this.rh = { };
+		this.rh["$" + key] = value;
+	}
+	,getReserved: function(key) {
+		if(this.rh == null) return null; else return this.rh["$" + key];
+	}
+};
+var haxe_io_Path = function(path) {
+	switch(path) {
+	case ".":case "..":
+		this.dir = path;
+		this.file = "";
+		return;
+	}
+	var c1 = path.lastIndexOf("/");
+	var c2 = path.lastIndexOf("\\");
+	if(c1 < c2) {
+		this.dir = HxOverrides.substr(path,0,c2);
+		path = HxOverrides.substr(path,c2 + 1,null);
+		this.backslash = true;
+	} else if(c2 < c1) {
+		this.dir = HxOverrides.substr(path,0,c1);
+		path = HxOverrides.substr(path,c1 + 1,null);
+	} else this.dir = null;
+	var cp = path.lastIndexOf(".");
+	if(cp != -1) {
+		this.ext = HxOverrides.substr(path,cp + 1,null);
+		this.file = HxOverrides.substr(path,0,cp);
+	} else {
+		this.ext = null;
+		this.file = path;
+	}
+};
+haxe_io_Path.withoutExtension = function(path) {
+	var s = new haxe_io_Path(path);
+	s.ext = null;
+	return s.toString();
+};
+haxe_io_Path.withoutDirectory = function(path) {
+	var s = new haxe_io_Path(path);
+	s.dir = null;
+	return s.toString();
+};
+haxe_io_Path.prototype = {
+	toString: function() {
+		return (this.dir == null?"":this.dir + (this.backslash?"\\":"/")) + this.file + (this.ext == null?"":"." + this.ext);
+	}
+};
 var systems_Input = function() {
 	this.pressed = new haxe_ds_IntMap();
 	window.document.onkeydown = $bind(this,this.onkeydown);
@@ -235,7 +307,20 @@ systems_Input.prototype = {
 var systems_Vis = function() {
 	this.canvas = window.document.getElementById("gameview");
 	this.ctx = this.canvas.getContext("2d");
+	this.ctx.imageSmoothingEnabled = false;
 	this.onresize();
+	this.image_ids = new haxe_ds_StringMap();
+	this.images = window.document.getElementsByTagName("img");
+	console.log(this.images);
+	var _g1 = 0;
+	var _g = this.images.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var name = this.images[i].src;
+		name = haxe_io_Path.withoutDirectory(name);
+		name = haxe_io_Path.withoutExtension(name);
+		this.image_ids.set(name,i);
+	}
 };
 systems_Vis.prototype = {
 	onresize: function() {
@@ -246,6 +331,13 @@ systems_Vis.prototype = {
 		if(col == null) col = "#ffffff";
 		this.ctx.fillStyle = col;
 		this.ctx.fillRect(x,y,w,h);
+	}
+	,image: function(id,x,y) {
+		var img = this.images[id];
+		this.ctx.drawImage(img,Math.floor(x),Math.floor(y));
+	}
+	,image_id: function(name) {
+		return this.image_ids.get(name);
 	}
 	,clear: function() {
 		this.ctx.clearRect(0,0,this.ctx.canvas.width,this.ctx.canvas.height);
@@ -259,6 +351,7 @@ systems_Vis.prototype = {
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
+var __map_reserved = {}
 Framework.start_time = 0;
 Main.main();
 })(typeof console != "undefined" ? console : {log:function(){}});
