@@ -1,4 +1,5 @@
 package entities;
+import systems.Vis.Image;
 
 class Player extends Entity {
     var speed:Float = 200;
@@ -7,13 +8,13 @@ class Player extends Entity {
     var shot_delay:Float = 0.2;
     var bullets:Array<Bullet>;
 
-    var image:Int;
+    var image:Image;
 
 
     public function new(_x:Float, _y:Float, _bullets:Array<Bullet>) {
-        super(_x, _y, 100, 30);
         bullets = _bullets;
-        image = Framework.vis.image_id('player_ship');
+        image = Framework.vis.get_image('player_ship');
+        super(_x, _y, image.width, image.height);
     }
 
     override public function draw() {
@@ -22,19 +23,23 @@ class Player extends Entity {
     }
 
     override public function update(dt:Float) {
+        var move = new Vector(0, 0);
         if(Framework.input.keydown(39)) { //right
-            rect.x += speed * dt;
+            move.x = 1;
         }
         else if(Framework.input.keydown(37)) { //left
-            rect.x -= speed * dt;
+            move.x = -1;
         }
 
         if(Framework.input.keydown(38)) { //up
-            rect.y -= speed * dt;
+            move.y = -1;
         }
-        else if(Framework.input.keydown(40)) {
-            rect.y += speed * dt;
+        else if(Framework.input.keydown(40)) { //down
+            move.y = 1;
         }
+
+        move.length = speed * dt; //Make sure we always move at the same speed, even when moving diagonally
+        rect.move(move.x, move.y);
 
         rect.x = clamp(rect.x, 0, Framework.vis.canvas_width - rect.w);
         rect.y = clamp(rect.y, 0, Framework.vis.canvas_height - rect.h);
@@ -42,7 +47,7 @@ class Player extends Entity {
         if(Framework.input.keydown(32)) {
             if(Framework.time - last_shot_time > shot_delay) {
                 var bullet = new Bullet(rect.x + rect.w, rect.y + rect.h / 2, 500, 0);
-                bullet.rect.y -= bullet.size / 2;
+                bullet.rect.y -= bullet.rect.h / 2;
                 bullets.push(bullet);
                 last_shot_time = Framework.time;
             }

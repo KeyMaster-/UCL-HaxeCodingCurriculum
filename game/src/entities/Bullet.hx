@@ -1,18 +1,18 @@
 package entities;
+import systems.Vis.Image;
 
 class Bullet extends Entity {
-    //:todo: The dead flag occurs in this and the enemy class already, and the player having it wouldn't be wrong - add it to Entity?
-    public var size(default, null):Int = 10;
-
+    var image:Image;
     var speed:Vector;
     
     public function new(_x:Float, _y:Float, _speed_x:Float, _speed_y:Float) {
-        super(_x, _y, 10, 10);
+        image = Framework.vis.get_image('bullet');
+        super(_x, _y, image.width, image.height);
         speed = new Vector(_speed_x, _speed_y);
     }
 
     override public function draw() {
-        Framework.vis.box(rect.x, rect.y, rect.w, rect.h);
+        Framework.vis.image(image, rect.x, rect.y);
     }
 
     override public function update(dt:Float) {

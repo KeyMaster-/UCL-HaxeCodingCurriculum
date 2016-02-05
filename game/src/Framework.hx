@@ -21,7 +21,6 @@ class Framework {
 
     function onready(_) {
         if(Browser.document.readyState == 'complete') {
-            Browser.window.onresize = onresize;
             run = Browser.window.requestAnimationFrame;
 
             start_time = time;
@@ -42,10 +41,6 @@ class Framework {
         run(update);
     }
 
-    function onresize(_) {
-        vis.onresize();
-    }
-    
     static function get_time():Float {
         return (Browser.window.performance.now() / 1000.0) - start_time;
     }

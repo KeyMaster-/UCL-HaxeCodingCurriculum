@@ -15,7 +15,6 @@ Framework.get_time = function() {
 Framework.prototype = {
 	onready: function(_) {
 		if(window.document.readyState == "complete") {
-			window.onresize = $bind(this,this.onresize);
 			this.run = ($_=window,$bind($_,$_.requestAnimationFrame));
 			Framework.start_time = Framework.get_time();
 			Framework.vis = new systems_Vis();
@@ -30,15 +29,12 @@ Framework.prototype = {
 		this.game.update(dt);
 		this.run($bind(this,this.update));
 	}
-	,onresize: function(_) {
-		Framework.vis.onresize();
-	}
 };
 var Game = function() {
 	this.enemy_spawn_interval = 2.0;
 	this.enemy_timer = 0;
 	this.bullets = [];
-	this.player = new entities_Player(0,Framework.vis.get_canvas_height() / 2,this.bullets);
+	this.player = new entities_Player(0,Framework.vis.canvas.height / 2,this.bullets);
 	this.player.rect.y -= this.player.rect.h / 2;
 	this.enemies = [];
 };
@@ -49,8 +45,8 @@ Game.prototype = {
 		this.player.draw();
 		this.enemy_timer -= dt;
 		if(this.enemy_timer <= 0) {
-			var enemy = new entities_Enemy(Framework.vis.get_canvas_width(),0);
-			enemy.rect.y = Math.random() * (Framework.vis.get_canvas_height() - enemy.rect.h);
+			var enemy = new entities_Enemy(Framework.vis.canvas.width,0);
+			enemy.rect.y = Math.random() * (Framework.vis.canvas.height - enemy.rect.h);
 			this.enemies.push(enemy);
 			this.enemy_timer = this.enemy_spawn_interval;
 		}
@@ -127,6 +123,11 @@ Vector.prototype = {
 	clone: function() {
 		return new Vector(this.x,this.y);
 	}
+	,set_xy: function(_x,_y) {
+		this.x = _x;
+		this.y = _y;
+		return this;
+	}
 	,add: function(v) {
 		this.x += v.x;
 		this.y += v.y;
@@ -136,6 +137,27 @@ Vector.prototype = {
 		this.x *= f;
 		this.y *= f;
 		return this;
+	}
+	,divide_scalar: function(f) {
+		if(f == 0) {
+			this.x = 0;
+			this.y = 0;
+			return this;
+		} else {
+			this.x = this.x / f;
+			this.y = this.y / f;
+			return this;
+		}
+	}
+	,normalise: function() {
+		return this.divide_scalar(Math.sqrt(this.x * this.x + this.y * this.y));
+	}
+	,get_length: function() {
+		return Math.sqrt(this.x * this.x + this.y * this.y);
+	}
+	,set_length: function(v) {
+		this.normalise().multiply_scalar(v);
+		return v;
 	}
 };
 var entities_Entity = function(_x,_y,_w,_h) {
@@ -152,18 +174,18 @@ entities_Entity.prototype = {
 	}
 };
 var entities_Bullet = function(_x,_y,_speed_x,_speed_y) {
-	this.size = 10;
-	entities_Entity.call(this,_x,_y,10,10);
+	this.image = Framework.vis.get_image("bullet");
+	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
 	this.speed = new Vector(_speed_x,_speed_y);
 };
 entities_Bullet.__super__ = entities_Entity;
 entities_Bullet.prototype = $extend(entities_Entity.prototype,{
 	draw: function() {
-		Framework.vis.box(this.rect.x,this.rect.y,this.rect.w,this.rect.h);
+		Framework.vis.image(this.image,this.rect.x,this.rect.y);
 	}
 	,update: function(dt) {
 		this.rect.move(this.speed.x * dt,this.speed.y * dt);
-		if(this.rect.x < -this.rect.w || this.rect.x > Framework.vis.get_canvas_width() || this.rect.y < -this.rect.h || this.rect.y > Framework.vis.get_canvas_height()) this.dead = true;
+		if(this.rect.x < -this.rect.w || this.rect.x > Framework.vis.canvas.width || this.rect.y < -this.rect.h || this.rect.y > Framework.vis.canvas.height) this.dead = true;
 	}
 	,destroy: function() {
 		entities_Entity.prototype.destroy.call(this);
@@ -188,9 +210,9 @@ var entities_Player = function(_x,_y,_bullets) {
 	this.shot_delay = 0.2;
 	this.last_shot_time = 0;
 	this.speed = 200;
-	entities_Entity.call(this,_x,_y,100,30);
 	this.bullets = _bullets;
-	this.image = Framework.vis.image_id("player_ship");
+	this.image = Framework.vis.get_image("player_ship");
+	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
 };
 entities_Player.__super__ = entities_Entity;
 entities_Player.prototype = $extend(entities_Entity.prototype,{
@@ -198,14 +220,17 @@ entities_Player.prototype = $extend(entities_Entity.prototype,{
 		Framework.vis.image(this.image,this.rect.x,this.rect.y);
 	}
 	,update: function(dt) {
-		if(Framework.input.keydown(39)) this.rect.x += this.speed * dt; else if(Framework.input.keydown(37)) this.rect.x -= this.speed * dt;
-		if(Framework.input.keydown(38)) this.rect.y -= this.speed * dt; else if(Framework.input.keydown(40)) this.rect.y += this.speed * dt;
-		this.rect.x = this.clamp(this.rect.x,0,Framework.vis.get_canvas_width() - this.rect.w);
-		this.rect.y = this.clamp(this.rect.y,0,Framework.vis.get_canvas_height() - this.rect.h);
+		var move = new Vector(0,0);
+		if(Framework.input.keydown(39)) move.x = 1; else if(Framework.input.keydown(37)) move.x = -1;
+		if(Framework.input.keydown(38)) move.y = -1; else if(Framework.input.keydown(40)) move.y = 1;
+		move.set_length(this.speed * dt);
+		this.rect.move(move.x,move.y);
+		this.rect.x = this.clamp(this.rect.x,0,Framework.vis.canvas.width - this.rect.w);
+		this.rect.y = this.clamp(this.rect.y,0,Framework.vis.canvas.height - this.rect.h);
 		if(Framework.input.keydown(32)) {
 			if(Framework.get_time() - this.last_shot_time > this.shot_delay) {
 				var bullet = new entities_Bullet(this.rect.x + this.rect.w,this.rect.y + this.rect.h / 2,500,0);
-				bullet.rect.y -= bullet.size / 2;
+				bullet.rect.y -= bullet.rect.h / 2;
 				this.bullets.push(bullet);
 				this.last_shot_time = Framework.get_time();
 			}
@@ -306,47 +331,53 @@ systems_Input.prototype = {
 };
 var systems_Vis = function() {
 	this.canvas = window.document.getElementById("gameview");
+	this.canvas.style.backgroundColor = "#111111";
 	this.ctx = this.canvas.getContext("2d");
 	this.ctx.imageSmoothingEnabled = false;
-	this.onresize();
-	this.image_ids = new haxe_ds_StringMap();
-	this.images = window.document.getElementsByTagName("img");
-	console.log(this.images);
-	var _g1 = 0;
-	var _g = this.images.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		var name = this.images[i].src;
+	this.images = new haxe_ds_StringMap();
+	var img_elements = window.document.getElementsByTagName("img");
+	var _g = 0;
+	while(_g < img_elements.length) {
+		var element = img_elements[_g];
+		++_g;
+		var name = element.src;
 		name = haxe_io_Path.withoutDirectory(name);
 		name = haxe_io_Path.withoutExtension(name);
-		this.image_ids.set(name,i);
+		var value = new systems_Image(element);
+		this.images.set(name,value);
 	}
 };
 systems_Vis.prototype = {
-	onresize: function() {
-		this.canvas.width = window.innerWidth;
-		this.canvas.height = window.innerHeight;
-	}
-	,box: function(x,y,w,h,col) {
+	box: function(x,y,w,h,col) {
 		if(col == null) col = "#ffffff";
 		this.ctx.fillStyle = col;
 		this.ctx.fillRect(x,y,w,h);
 	}
-	,image: function(id,x,y) {
-		var img = this.images[id];
-		this.ctx.drawImage(img,Math.floor(x),Math.floor(y));
+	,image: function(image,x,y) {
+		this.ctx.drawImage(image.image_element,Math.floor(x),Math.floor(y));
 	}
-	,image_id: function(name) {
-		return this.image_ids.get(name);
+	,get_image: function(name) {
+		return this.images.get(name);
 	}
 	,clear: function() {
-		this.ctx.clearRect(0,0,this.ctx.canvas.width,this.ctx.canvas.height);
+		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 	}
 	,get_canvas_width: function() {
 		return this.canvas.width;
 	}
 	,get_canvas_height: function() {
 		return this.canvas.height;
+	}
+};
+var systems_Image = function(_image_element) {
+	this.image_element = _image_element;
+};
+systems_Image.prototype = {
+	get_width: function() {
+		return this.image_element.width;
+	}
+	,get_height: function() {
+		return this.image_element.height;
 	}
 };
 var $_, $fid = 0;
