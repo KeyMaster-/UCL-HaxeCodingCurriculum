@@ -6,22 +6,20 @@ class Player extends Entity {
 
     var last_shot_time:Float = 0;
     var shot_delay:Float = 0.2;
-    var bullets:Array<Bullet>;
 
     var image:Image;
 
-
-    public function new(_x:Float, _y:Float, _bullets:Array<Bullet>) {
-        bullets = _bullets;
+    public function new(_x:Float, _y:Float) {
+        tag = EntityTag.Player;
         image = Framework.vis.get_image('player_ship');
         super(_x, _y, image.width, image.height);
     }
 
     override public function draw() {
-        // Framework.vis.box(rect.x, rect.y, rect.w, rect.h);
         Framework.vis.image(image, rect.x, rect.y);
     }
 
+    //:todo:lesson: Conditionals; Variables; Normalising vectors
     override public function update(dt:Float) {
         var move = new Vector(0, 0);
         if(Framework.input.keydown(39)) { //right
@@ -46,20 +44,15 @@ class Player extends Entity {
 
         if(Framework.input.keydown(32)) {
             if(Framework.time - last_shot_time > shot_delay) {
-                var bullet = new Bullet(rect.x + rect.w, rect.y + rect.h / 2, 500, 0);
+                var bullet = new Bullet(rect.x + rect.w, rect.y + rect.h / 2, 500, 0, true);
                 bullet.rect.y -= bullet.rect.h / 2;
-                bullets.push(bullet);
+                Framework.game.addEntity(bullet);
                 last_shot_time = Framework.time;
             }
         }
-
-        for(bullet in bullets) {
-            bullet.update(dt);
-        }
-
     }
 
-    //:todo: potentially move to different class
+        //:todo: potentially move to different class
     function clamp(value:Float, lower:Float, upper:Float):Float {
         return value < lower ? lower : (value > upper ? upper : value);
     }

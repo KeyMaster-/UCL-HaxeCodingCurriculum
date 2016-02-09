@@ -1,4 +1,5 @@
 (function (console) { "use strict";
+var $estr = function() { return js_Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -9,6 +10,7 @@ var Framework = function() {
 	this.last_time = 0;
 	window.document.onreadystatechange = $bind(this,this.onready);
 };
+Framework.__name__ = true;
 Framework.get_time = function() {
 	return window.performance.now() / 1000.0 - Framework.start_time;
 };
@@ -19,73 +21,66 @@ Framework.prototype = {
 			Framework.start_time = Framework.get_time();
 			Framework.vis = new systems_Vis();
 			Framework.input = new systems_Input();
-			this.game = new Game();
+			Framework.game = new Game();
 			this.run($bind(this,this.update));
 		}
 	}
 	,update: function(t) {
 		var dt = Framework.get_time() - this.last_time;
 		this.last_time = Framework.get_time();
-		this.game.update(dt);
+		Framework.game.update(dt);
 		this.run($bind(this,this.update));
 	}
 };
 var Game = function() {
 	this.enemy_spawn_interval = 2.0;
 	this.enemy_timer = 0;
-	this.bullets = [];
-	this.player = new entities_Player(0,Framework.vis.canvas.height / 2,this.bullets);
-	this.player.rect.y -= this.player.rect.h / 2;
-	this.enemies = [];
+	this.entities = [];
+	var player = new entities_Player(0,Framework.vis.canvas.height / 2);
+	player.rect.y -= player.rect.h / 2;
+	this.addEntity(player);
 };
+Game.__name__ = true;
 Game.prototype = {
 	update: function(dt) {
 		Framework.vis.clear();
-		this.player.update(dt);
-		this.player.draw();
 		this.enemy_timer -= dt;
 		if(this.enemy_timer <= 0) {
 			var enemy = new entities_Enemy(Framework.vis.canvas.width,0);
 			enemy.rect.y = Math.random() * (Framework.vis.canvas.height - enemy.rect.h);
-			this.enemies.push(enemy);
+			this.entities.push(enemy);
 			this.enemy_timer = this.enemy_spawn_interval;
 		}
-		var i = this.bullets.length;
+		var i = this.entities.length;
 		while(i > 0) {
 			i--;
-			var bullet = this.bullets[i];
-			bullet.update(dt);
-			if(bullet.dead) {
-				bullet.destroy();
-				this.bullets.splice(i,1);
+			var entity = this.entities[i];
+			entity.update(dt);
+			entity.draw();
+			if(entity.dead) {
+				entity.destroy();
+				this.entities.splice(i,1);
 				continue;
 			}
-			bullet.draw();
-		}
-		i = this.enemies.length;
-		while(i > 0) {
-			i--;
-			var enemy1 = this.enemies[i];
-			enemy1.update(dt);
 			var _g = 0;
-			var _g1 = this.bullets;
+			var _g1 = this.entities;
 			while(_g < _g1.length) {
-				var bullet1 = _g1[_g];
+				var other_entity = _g1[_g];
 				++_g;
-				if(!bullet1.dead && enemy1.rect.overlaps(bullet1.rect)) {
-					bullet1.dead = true;
-					enemy1.dead = true;
+				if(other_entity == entity) continue;
+				if(!other_entity.dead && other_entity.rect.overlaps(entity.rect)) {
+					other_entity.collided(entity);
+					entity.collided(other_entity);
 				}
 			}
-			if(enemy1.dead) {
-				this.enemies.splice(i,1);
-				continue;
-			}
-			enemy1.draw();
 		}
+	}
+	,addEntity: function(_entity) {
+		this.entities.push(_entity);
 	}
 };
 var HxOverrides = function() { };
+HxOverrides.__name__ = true;
 HxOverrides.substr = function(s,pos,len) {
 	if(pos != null && pos != 0 && len != null && len < 0) return "";
 	if(len == null) len = s.length;
@@ -96,15 +91,18 @@ HxOverrides.substr = function(s,pos,len) {
 	return s.substr(pos,len);
 };
 var Main = function() { };
+Main.__name__ = true;
 Main.main = function() {
 	new Framework();
 };
+Math.__name__ = true;
 var Rect = function(_x,_y,_w,_h) {
 	this.x = _x;
 	this.y = _y;
 	this.w = _w;
 	this.h = _h;
 };
+Rect.__name__ = true;
 Rect.prototype = {
 	move: function(_x,_y) {
 		this.x += _x;
@@ -119,6 +117,7 @@ var Vector = function(_x,_y) {
 	this.x = _x;
 	this.y = _y;
 };
+Vector.__name__ = true;
 Vector.prototype = {
 	clone: function() {
 		return new Vector(this.x,this.y);
@@ -164,20 +163,33 @@ var entities_Entity = function(_x,_y,_w,_h) {
 	this.dead = false;
 	this.rect = new Rect(_x,_y,_w,_h);
 };
+entities_Entity.__name__ = true;
 entities_Entity.prototype = {
 	draw: function() {
 	}
 	,update: function(dt) {
 	}
+	,collided: function(other) {
+	}
 	,destroy: function() {
 		this.rect = null;
 	}
 };
-var entities_Bullet = function(_x,_y,_speed_x,_speed_y) {
-	this.image = Framework.vis.get_image("bullet");
+var entities_Bullet = function(_x,_y,_speed_x,_speed_y,_friendly) {
+	var image_name = "";
+	if(_friendly) {
+		this.tag = entities_EntityTag.PlayerBullet;
+		image_name = "player_bullet";
+	} else {
+		this.tag = entities_EntityTag.EnemyBullet;
+		image_name = "enemy_bullet";
+	}
+	console.log(image_name);
+	this.image = Framework.vis.get_image(image_name);
 	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
 	this.speed = new Vector(_speed_x,_speed_y);
 };
+entities_Bullet.__name__ = true;
 entities_Bullet.__super__ = entities_Entity;
 entities_Bullet.prototype = $extend(entities_Entity.prototype,{
 	draw: function() {
@@ -187,33 +199,58 @@ entities_Bullet.prototype = $extend(entities_Entity.prototype,{
 		this.rect.move(this.speed.x * dt,this.speed.y * dt);
 		if(this.rect.x < -this.rect.w || this.rect.x > Framework.vis.canvas.width || this.rect.y < -this.rect.h || this.rect.y > Framework.vis.canvas.height) this.dead = true;
 	}
+	,collided: function(other) {
+		if(this.tag == entities_EntityTag.PlayerBullet && other.tag == entities_EntityTag.Enemy || this.tag == entities_EntityTag.EnemyBullet && other.tag == entities_EntityTag.Player) this.dead = true;
+	}
 	,destroy: function() {
 		entities_Entity.prototype.destroy.call(this);
 		this.speed = null;
 	}
 });
 var entities_Enemy = function(_x,_y) {
-	this.speed = 200;
-	entities_Entity.call(this,_x,_y,100,30);
+	this.horizontal_speed = 150;
+	this.vertical_speed = 200;
+	this.tag = entities_EntityTag.Enemy;
+	entities_Entity.call(this,_x,_y,50,50);
+	if(Math.random() >= 0.5) this.direction = -1; else this.direction = 1;
 };
+entities_Enemy.__name__ = true;
 entities_Enemy.__super__ = entities_Entity;
 entities_Enemy.prototype = $extend(entities_Entity.prototype,{
 	draw: function() {
 		Framework.vis.box(this.rect.x,this.rect.y,this.rect.w,this.rect.h);
 	}
 	,update: function(dt) {
-		this.rect.x -= dt * this.speed;
-		if(this.rect.x < -this.rect.w) this.dead = true;
+		if(this.rect.x > Framework.vis.canvas.width * 0.66666666666666663) this.rect.x -= dt * this.horizontal_speed;
+		this.rect.y += dt * this.vertical_speed * this.direction;
+		if(this.rect.y <= 0 || this.rect.y >= Framework.vis.canvas.height - this.rect.h) this.direction = -this.direction;
+	}
+	,collided: function(other) {
+		if(other.tag == entities_EntityTag.PlayerBullet) this.dead = true;
 	}
 });
-var entities_Player = function(_x,_y,_bullets) {
+var entities_EntityTag = { __ename__ : true, __constructs__ : ["Player","Enemy","PlayerBullet","EnemyBullet"] };
+entities_EntityTag.Player = ["Player",0];
+entities_EntityTag.Player.toString = $estr;
+entities_EntityTag.Player.__enum__ = entities_EntityTag;
+entities_EntityTag.Enemy = ["Enemy",1];
+entities_EntityTag.Enemy.toString = $estr;
+entities_EntityTag.Enemy.__enum__ = entities_EntityTag;
+entities_EntityTag.PlayerBullet = ["PlayerBullet",2];
+entities_EntityTag.PlayerBullet.toString = $estr;
+entities_EntityTag.PlayerBullet.__enum__ = entities_EntityTag;
+entities_EntityTag.EnemyBullet = ["EnemyBullet",3];
+entities_EntityTag.EnemyBullet.toString = $estr;
+entities_EntityTag.EnemyBullet.__enum__ = entities_EntityTag;
+var entities_Player = function(_x,_y) {
 	this.shot_delay = 0.2;
 	this.last_shot_time = 0;
 	this.speed = 200;
-	this.bullets = _bullets;
+	this.tag = entities_EntityTag.Player;
 	this.image = Framework.vis.get_image("player_ship");
 	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
 };
+entities_Player.__name__ = true;
 entities_Player.__super__ = entities_Entity;
 entities_Player.prototype = $extend(entities_Entity.prototype,{
 	draw: function() {
@@ -229,18 +266,11 @@ entities_Player.prototype = $extend(entities_Entity.prototype,{
 		this.rect.y = this.clamp(this.rect.y,0,Framework.vis.canvas.height - this.rect.h);
 		if(Framework.input.keydown(32)) {
 			if(Framework.get_time() - this.last_shot_time > this.shot_delay) {
-				var bullet = new entities_Bullet(this.rect.x + this.rect.w,this.rect.y + this.rect.h / 2,500,0);
+				var bullet = new entities_Bullet(this.rect.x + this.rect.w,this.rect.y + this.rect.h / 2,500,0,true);
 				bullet.rect.y -= bullet.rect.h / 2;
-				this.bullets.push(bullet);
+				Framework.game.addEntity(bullet);
 				this.last_shot_time = Framework.get_time();
 			}
-		}
-		var _g = 0;
-		var _g1 = this.bullets;
-		while(_g < _g1.length) {
-			var bullet1 = _g1[_g];
-			++_g;
-			bullet1.update(dt);
 		}
 	}
 	,clamp: function(value,lower,upper) {
@@ -248,13 +278,16 @@ entities_Player.prototype = $extend(entities_Entity.prototype,{
 	}
 });
 var haxe_IMap = function() { };
+haxe_IMap.__name__ = true;
 var haxe_ds_IntMap = function() {
 	this.h = { };
 };
+haxe_ds_IntMap.__name__ = true;
 haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
+haxe_ds_StringMap.__name__ = true;
 haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	set: function(key,value) {
@@ -298,6 +331,7 @@ var haxe_io_Path = function(path) {
 		this.file = path;
 	}
 };
+haxe_io_Path.__name__ = true;
 haxe_io_Path.withoutExtension = function(path) {
 	var s = new haxe_io_Path(path);
 	s.ext = null;
@@ -313,11 +347,81 @@ haxe_io_Path.prototype = {
 		return (this.dir == null?"":this.dir + (this.backslash?"\\":"/")) + this.file + (this.ext == null?"":"." + this.ext);
 	}
 };
+var js_Boot = function() { };
+js_Boot.__name__ = true;
+js_Boot.__string_rec = function(o,s) {
+	if(o == null) return "null";
+	if(s.length >= 5) return "<...>";
+	var t = typeof(o);
+	if(t == "function" && (o.__name__ || o.__ename__)) t = "object";
+	switch(t) {
+	case "object":
+		if(o instanceof Array) {
+			if(o.__enum__) {
+				if(o.length == 2) return o[0];
+				var str2 = o[0] + "(";
+				s += "\t";
+				var _g1 = 2;
+				var _g = o.length;
+				while(_g1 < _g) {
+					var i1 = _g1++;
+					if(i1 != 2) str2 += "," + js_Boot.__string_rec(o[i1],s); else str2 += js_Boot.__string_rec(o[i1],s);
+				}
+				return str2 + ")";
+			}
+			var l = o.length;
+			var i;
+			var str1 = "[";
+			s += "\t";
+			var _g2 = 0;
+			while(_g2 < l) {
+				var i2 = _g2++;
+				str1 += (i2 > 0?",":"") + js_Boot.__string_rec(o[i2],s);
+			}
+			str1 += "]";
+			return str1;
+		}
+		var tostr;
+		try {
+			tostr = o.toString;
+		} catch( e ) {
+			return "???";
+		}
+		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
+			var s2 = o.toString();
+			if(s2 != "[object Object]") return s2;
+		}
+		var k = null;
+		var str = "{\n";
+		s += "\t";
+		var hasp = o.hasOwnProperty != null;
+		for( var k in o ) {
+		if(hasp && !o.hasOwnProperty(k)) {
+			continue;
+		}
+		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__" || k == "__properties__") {
+			continue;
+		}
+		if(str.length != 2) str += ", \n";
+		str += s + k + " : " + js_Boot.__string_rec(o[k],s);
+		}
+		s = s.substring(1);
+		str += "\n" + s + "}";
+		return str;
+	case "function":
+		return "<function>";
+	case "string":
+		return o;
+	default:
+		return String(o);
+	}
+};
 var systems_Input = function() {
 	this.pressed = new haxe_ds_IntMap();
 	window.document.onkeydown = $bind(this,this.onkeydown);
 	window.document.onkeyup = $bind(this,this.onkeyup);
 };
+systems_Input.__name__ = true;
 systems_Input.prototype = {
 	onkeydown: function(event) {
 		this.pressed.h[event.keyCode] = true;
@@ -333,7 +437,6 @@ var systems_Vis = function() {
 	this.canvas = window.document.getElementById("gameview");
 	this.canvas.style.backgroundColor = "#111111";
 	this.ctx = this.canvas.getContext("2d");
-	this.ctx.imageSmoothingEnabled = false;
 	this.images = new haxe_ds_StringMap();
 	var img_elements = window.document.getElementsByTagName("img");
 	var _g = 0;
@@ -347,6 +450,7 @@ var systems_Vis = function() {
 		this.images.set(name,value);
 	}
 };
+systems_Vis.__name__ = true;
 systems_Vis.prototype = {
 	box: function(x,y,w,h,col) {
 		if(col == null) col = "#ffffff";
@@ -372,6 +476,7 @@ systems_Vis.prototype = {
 var systems_Image = function(_image_element) {
 	this.image_element = _image_element;
 };
+systems_Image.__name__ = true;
 systems_Image.prototype = {
 	get_width: function() {
 		return this.image_element.width;
@@ -382,6 +487,8 @@ systems_Image.prototype = {
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
+String.__name__ = true;
+Array.__name__ = true;
 var __map_reserved = {}
 Framework.start_time = 0;
 Main.main();

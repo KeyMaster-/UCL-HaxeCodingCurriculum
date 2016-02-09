@@ -6,8 +6,8 @@ import js.Browser;
 class Framework {
     public static var vis:Vis;
     public static var input:Input;
+    public static var game:Game;
     
-    var game:Game;
     var run:(Float->Void)->Void;
 
     public static var time(get, never):Float;

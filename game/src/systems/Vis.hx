@@ -19,7 +19,6 @@ class Vis {
         canvas = cast Browser.document.getElementById('gameview');
         canvas.style.backgroundColor = '#111111';
         ctx = canvas.getContext('2d');
-        ctx.imageSmoothingEnabled = false;
 
             //initialise images
         images = new Map();

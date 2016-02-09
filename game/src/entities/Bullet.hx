@@ -4,10 +4,19 @@ import systems.Vis.Image;
 class Bullet extends Entity {
     var image:Image;
     var speed:Vector;
-    
-    public function new(_x:Float, _y:Float, _speed_x:Float, _speed_y:Float) {
-        image = Framework.vis.get_image('bullet');
-        super(_x, _y, image.width, image.height);
+
+    public function new(_x:Float, _y:Float, _speed_x:Float, _speed_y:Float, _friendly:Bool) {
+        var image_name = '';
+        if(_friendly) {
+            tag = PlayerBullet;
+            image_name = 'player_bullet';
+        }
+        else {
+            tag = EnemyBullet;
+            image_name = 'enemy_bullet';
+        }
+        image = Framework.vis.get_image(image_name);
+        super(_x, _y, image.width, image.height); //Call the super constructor before setting the speed, since the speed vector doesn't exist before that
         speed = new Vector(_speed_x, _speed_y);
     }
 
@@ -22,9 +31,14 @@ class Bullet extends Entity {
         }
     }
 
+    override public function collided(other:Entity) {
+        if((tag == EntityTag.PlayerBullet && other.tag == EntityTag.Enemy) || (tag == EntityTag.EnemyBullet && other.tag == EntityTag.Player)) {
+            dead = true;
+        }
+    }
+
     override public function destroy() {
         super.destroy();
         speed = null;
     }
-
 }
