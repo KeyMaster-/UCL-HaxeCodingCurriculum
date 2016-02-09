@@ -27,6 +27,12 @@ class Vector {
         return this;
     }
 
+    public function subtract(v:Vector):Vector {
+        x -= v.x;
+        y -= v.y;
+        return this;
+    }
+
     public function multiply_scalar(f:Float):Vector {
         x *= f;
         y *= f;

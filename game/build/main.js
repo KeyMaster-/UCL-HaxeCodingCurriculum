@@ -36,9 +36,9 @@ var Game = function() {
 	this.enemy_spawn_interval = 2.0;
 	this.enemy_timer = 0;
 	this.entities = [];
-	var player = new entities_Player(0,Framework.vis.canvas.height / 2);
-	player.rect.y -= player.rect.h / 2;
-	this.addEntity(player);
+	this.player = new entities_Player(0,Framework.vis.canvas.height / 2);
+	this.player.rect.y -= this.player.rect.h / 2;
+	this.addEntity(this.player);
 };
 Game.__name__ = true;
 Game.prototype = {
@@ -46,7 +46,7 @@ Game.prototype = {
 		Framework.vis.clear();
 		this.enemy_timer -= dt;
 		if(this.enemy_timer <= 0) {
-			var enemy = new entities_Enemy(Framework.vis.canvas.width,0);
+			var enemy = new entities_Enemy(Framework.vis.canvas.width,0,this.player);
 			enemy.rect.y = Math.random() * (Framework.vis.canvas.height - enemy.rect.h);
 			this.entities.push(enemy);
 			this.enemy_timer = this.enemy_spawn_interval;
@@ -132,6 +132,11 @@ Vector.prototype = {
 		this.y += v.y;
 		return this;
 	}
+	,subtract: function(v) {
+		this.x -= v.x;
+		this.y -= v.y;
+		return this;
+	}
 	,multiply_scalar: function(f) {
 		this.x *= f;
 		this.y *= f;
@@ -184,7 +189,6 @@ var entities_Bullet = function(_x,_y,_speed_x,_speed_y,_friendly) {
 		this.tag = entities_EntityTag.EnemyBullet;
 		image_name = "enemy_bullet";
 	}
-	console.log(image_name);
 	this.image = Framework.vis.get_image(image_name);
 	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
 	this.speed = new Vector(_speed_x,_speed_y);
@@ -207,12 +211,17 @@ entities_Bullet.prototype = $extend(entities_Entity.prototype,{
 		this.speed = null;
 	}
 });
-var entities_Enemy = function(_x,_y) {
+var entities_Enemy = function(_x,_y,_player) {
+	this.added_shot_time_range = 1;
+	this.min_shot_time = 2;
+	this.shot_speed = 100;
 	this.horizontal_speed = 150;
 	this.vertical_speed = 200;
 	this.tag = entities_EntityTag.Enemy;
+	this.player = _player;
 	entities_Entity.call(this,_x,_y,50,50);
 	if(Math.random() >= 0.5) this.direction = -1; else this.direction = 1;
+	this.shot_timer = this.min_shot_time + Math.random() * this.added_shot_time_range;
 };
 entities_Enemy.__name__ = true;
 entities_Enemy.__super__ = entities_Entity;
@@ -222,6 +231,15 @@ entities_Enemy.prototype = $extend(entities_Entity.prototype,{
 	}
 	,update: function(dt) {
 		if(this.rect.x > Framework.vis.canvas.width * 0.66666666666666663) this.rect.x -= dt * this.horizontal_speed;
+		this.shot_timer -= dt;
+		if(this.shot_timer <= 0) {
+			var shot_dir = new Vector(this.player.rect.x + this.player.rect.w / 2,this.player.rect.y + this.player.rect.h / 2);
+			shot_dir.subtract(new Vector(this.rect.x,this.rect.y + this.rect.w / 2));
+			shot_dir.set_length(this.shot_speed);
+			var bullet = new entities_Bullet(this.rect.x,this.rect.y + this.rect.w / 2,shot_dir.x,shot_dir.y,false);
+			Framework.game.addEntity(bullet);
+			this.shot_timer = this.min_shot_time + Math.random() * this.added_shot_time_range;
+		}
 		this.rect.y += dt * this.vertical_speed * this.direction;
 		if(this.rect.y <= 0 || this.rect.y >= Framework.vis.canvas.height - this.rect.h) this.direction = -this.direction;
 	}

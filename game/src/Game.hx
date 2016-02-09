@@ -7,15 +7,16 @@ import entities.Bullet;
 
 class Game {
     var entities:Array<Entity>;
+    var player:Player;
 
     var enemy_timer:Float = 0;
     var enemy_spawn_interval:Float = 2.0;
 
     public function new() {
         entities = [];
-        var player = new Player(0, Framework.vis.canvas_height / 2);
+        player = new Player(0, Framework.vis.canvas_height / 2);
         player.rect.y -= player.rect.h / 2;
-        addEntity(player);
+        addEntity(player); //Add the player so it receives updates and collides with enemy bullets
     }
 
     //:todo:note: Useful website for finding keycodes: http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
@@ -27,7 +28,7 @@ class Game {
             //Spawn new enemies
         enemy_timer -= dt;
         if(enemy_timer <= 0) {
-            var enemy = new Enemy(Framework.vis.canvas_width, 0);
+            var enemy = new Enemy(Framework.vis.canvas_width, 0, player);
             enemy.rect.y = Math.random() * (Framework.vis.canvas_height - enemy.rect.h);
             entities.push(enemy);
             enemy_timer = enemy_spawn_interval;
