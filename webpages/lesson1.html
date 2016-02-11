@@ -36,11 +36,53 @@
 				<h2>Lesson 1</h2>
 				<span class="byline">Variables. Data types.</span> 
 			</div>
-			<p>Lesson content here.</p>
+				<p>	The main function of any computer program is to collect, store and process data in one way or another. Therefore before learning anything else, we need to understand what Data Types and Variables are, as these are key to knowing how to process data. </p>
 
-			<p>Code example: 
-			<pre class="prettyprint"><code class="language-haxe">var n:Int = 0;</code></pre>
-			</p>
+				<h3>Data Types</h3><br>
+
+				<p>"Data Types" is a term used to refer to the different forms of data that exist in a program. For instance, numbers such as 5 or 500 are called Integers (or Int for short), whereas letters or a group of letters such as “f” or “five” are known as a String.
+
+				We need to specify what type of data we are using in a program because these various types of data take up different amounts of memory, also, certain operations can only be performed on some of these types. For instance we cannot divide 5 by the String “hello”.
+
+				<br><br>Here is a full list of the different data types available in Haxe:</p>
+
+				<li><i>String</i> - A letter or group of letters. E.g. “f” or “five” </li><br>
+				<li><i>Integer</i> - Numbers such as 5 or 500, or even hexadecimal numbers like 0xFA.</li><br>
+				<li><i>Float</i> - Decimal point numbers such at 1.5 or 100.523. Scientific notation can be used here as well. e.g. 2e4 (2 x 10^4)</li><br>
+				<li><i>Boolean</i> - A type that can only be one of two values, true or false.</li><br>
+				<li><i>Dynamic</i> - This data type can be any type, and can even change types during the course of a program.</li><br>
+				<li><i>Unknown</i> - A data type that we have not yet set. This gets set automatically once you give it some data.</li><br>
+				<li><i>Void</i> - A way to represent no type, for example when there is no data.</li><br>
+
+				<br>
+				<h3>Variables</h3><br>
+
+				<p>In any program, variables are the containers for the data that we use. These variables are given a name so that we can keep track of them easily. No two variables can have the same name.
+
+				When we want to create a variable to contain our data, we “declare” the variable by giving it a name and the type of data that it will contain. This is known as “Declaration”.</p>
+
+
+				<h4>Example</h4>
+
+				<pre class="prettyprint"><code class="language-haxe">var shipName:String = “Galactica”;</code></pre>
+
+				<p>In this example we use the <code>var</code> keyword to indicate that we are going to declare a variable. <code>shipName</code> is the name we are giving to this variable, and <code>String</code> is the type of data that can be contained within it. We also initialise the variable by giving it some data straight away. In this case our ship is called the <code>“Galactica”</code>. 
+
+				<br>If we wanted to rename our ship later in the program we can do this by simply writing the following line:</p>
+
+				<pre class="prettyprint"><code class="language-haxe">shipName = “Colonial One”;</code></pre>				
+
+				<p>Notice we do not need to use the keyword <code>var</code> or specify a type again as we have already declared the variable and given it name which we can use to refer to it later in the program.</p>
+
+				<br><br>	
+				<h2>Exercise 1</h2><br>
+
+				<p>Open the file <code>filename</code> and go to line <code>lineNumber</code>
+
+				<br>Here are several examples of variables that we will be using in our game.<br>
+				Change the <code>Variable</code> variables.</p>
+
+			</p>	
 
 		</div>
 		<div id="sidebar">
