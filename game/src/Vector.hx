@@ -6,13 +6,19 @@ class Vector {
 
     public var length(get, set):Float;
 
-    public function new(_x:Float, _y:Float) {
+    public function new(_x:Float = 0, _y:Float = 0) {
         x = _x;
         y = _y;
     }
 
     public function clone():Vector {
         return new Vector(x, y);
+    }
+
+    public function copy_from(v:Vector):Vector {
+        x = v.x;
+        y = v.y;
+        return this;
     }
 
     inline public function set_xy(_x:Float, _y:Float) {

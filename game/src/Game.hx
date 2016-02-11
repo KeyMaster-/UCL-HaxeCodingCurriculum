@@ -12,6 +12,8 @@ class Game {
     var enemy_timer:Float = 0;
     var enemy_spawn_interval:Float = 2.0;
 
+    var gameover:Bool = false;
+
     public function new() {
         entities = [];
         player = new Player(0, Framework.vis.canvas_height / 2);
@@ -25,6 +27,10 @@ class Game {
     public function update(dt:Float) {
         Framework.vis.clear();
 
+        if(gameover) {
+            Framework.vis.text("Game over!", Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2, '#ffffff', 20, 'middle', 'center');
+            return;
+        }
             //Spawn new enemies
         enemy_timer -= dt;
         if(enemy_timer <= 0) {
@@ -58,35 +64,10 @@ class Game {
             }
         }
 
-        // var i:Int = bullets.length;
-        // while(i > 0) {
-        //     i--;
-        //     var bullet = bullets[i];
-        //     bullet.update(dt);
-        //     if(bullet.dead) {
-        //         bullet.destroy();
-        //         bullets.splice(i, 1); //Removes the bullet from the array
-        //         continue;
-        //     }
-        //     bullet.draw();
-        // }
-        // i = enemies.length;
-        // while(i > 0) {
-        //     i--;
-        //     var enemy = enemies[i];
-        //     enemy.update(dt);
-        //     for(bullet in bullets) {
-        //         if(!bullet.dead && enemy.rect.overlaps(bullet.rect)) { //Don't interact with dead bullets that wasn't cleaned up yet
-        //             bullet.dead = true;
-        //             enemy.dead = true;
-        //         }
-        //     }
-        //     if(enemy.dead) {
-        //         enemies.splice(i, 1);
-        //         continue; //:todo: Using continue here (and in the player class for the same thing) could be a good teaching way, but also be a bit difficult to understand? Just if/else may be clearer
-        //     }
-        //     enemy.draw();
-        // }
+        if(player.dead) {
+            gameover = true;
+
+        }
     }
 
     public function addEntity(_entity:Entity) {

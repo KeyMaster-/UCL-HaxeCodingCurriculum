@@ -2,6 +2,7 @@ package entities;
 import systems.Vis.Image;
 
 class Bullet extends Entity {
+    public var damage:Int = 1;
     var image:Image;
     var speed:Vector;
 
@@ -32,7 +33,14 @@ class Bullet extends Entity {
     }
 
     override public function collided(other:Entity) {
-        if((tag == EntityTag.PlayerBullet && other.tag == EntityTag.Enemy) || (tag == EntityTag.EnemyBullet && other.tag == EntityTag.Player)) {
+        if(tag == EntityTag.PlayerBullet && other.tag == EntityTag.Enemy){
+            var enemy = cast(other, Enemy);
+            enemy.health -= damage;
+            dead = true;
+        }
+        else if(tag == EntityTag.EnemyBullet && other.tag == EntityTag.Player) {
+            var player = cast(other, Player);
+            player.health -= damage;
             dead = true;
         }
     }

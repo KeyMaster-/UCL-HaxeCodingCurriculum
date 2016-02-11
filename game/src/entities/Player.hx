@@ -9,6 +9,8 @@ class Player extends Entity {
 
     var image:Image;
 
+    public var health:Int = 10;
+
     public function new(_x:Float, _y:Float) {
         tag = EntityTag.Player;
         image = Framework.vis.get_image('player_ship');
@@ -17,10 +19,15 @@ class Player extends Entity {
 
     override public function draw() {
         Framework.vis.image(image, rect.x, rect.y);
+        Framework.vis.text('Health: $health', 10, 10);
     }
 
     //:todo:lesson: Conditionals; Variables; Normalising vectors
     override public function update(dt:Float) {
+        if(health <= 0) {
+            dead = true;
+            return;
+        }
         var move = new Vector(0, 0);
         if(Framework.input.keydown(39)) { //right
             move.x = 1;

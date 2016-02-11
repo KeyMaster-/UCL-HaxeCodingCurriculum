@@ -33,7 +33,7 @@ class Vis {
         //:todo: focus change
     }
 
-    public function box(x:Float, y:Float, w:Float, h:Float, col = '#ffffff') {
+    public function box(x:Float, y:Float, w:Float, h:Float, col:String = '#ffffff') {
         ctx.fillStyle = col;
         ctx.fillRect(x, y, w, h);
     }
@@ -44,6 +44,14 @@ class Vis {
 
     public function get_image(name:String):Image {
         return images.get(name);
+    }
+
+    public function text(text:String, x:Float, y:Float, col:String = '#ffffff', size:Int = 20, baseline:String = 'top', align:String = 'left') {
+        ctx.font = '${size}px Arial';
+        ctx.fillStyle = col;
+        ctx.textBaseline = baseline;
+        ctx.textAlign = align;
+        ctx.fillText(text, x, y);
     }
 
     public function clear() {
