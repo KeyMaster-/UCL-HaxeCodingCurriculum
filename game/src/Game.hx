@@ -9,6 +9,7 @@ import entities.Missile;
 class Game {
     var entities:Array<Entity>;
     var player:Player;
+    var score:Int = 0;
 
     var enemy_timer:Float = 0;
     var enemy_spawn_interval:Float = 2.0;
@@ -68,8 +69,9 @@ class Game {
 
         if(player.dead) {
             gameover = true;
-
         }
+
+        Framework.vis.text('Score: $score', Framework.vis.canvas_width - 10, 10, '#ffffff', 20, 'top', 'right');
     }
 
     function reset() {
@@ -80,6 +82,7 @@ class Game {
         }
         entities = [];
         initPlayer();
+        score = 0;
     }
 
     function initPlayer() {
@@ -90,5 +93,9 @@ class Game {
 
     public function addEntity(_entity:Entity) {
         entities.push(_entity);
+    }
+
+    public function addScore(_amount:Int) {
+        score += _amount;
     }
 }

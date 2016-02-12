@@ -44,6 +44,7 @@ class Enemy extends Entity {
     override public function update(dt:Float) {
         if(health <= 0) {
             dead = true;
+            Framework.game.addScore(1);
             return;
         }
         shot_timer -= dt;

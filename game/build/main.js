@@ -37,6 +37,7 @@ var Game = function() {
 	this.gameover = false;
 	this.enemy_spawn_interval = 2.0;
 	this.enemy_timer = 0;
+	this.score = 0;
 	this.reset();
 };
 Game.__name__ = true;
@@ -82,6 +83,7 @@ Game.prototype = {
 			}
 		}
 		if(this.player.dead) this.gameover = true;
+		Framework.vis.text("Score: " + this.score,Framework.vis.canvas.width - 10,10,"#ffffff",20,"top","right");
 	}
 	,reset: function() {
 		if(this.entities != null) {
@@ -95,6 +97,7 @@ Game.prototype = {
 		}
 		this.entities = [];
 		this.initPlayer();
+		this.score = 0;
 	}
 	,initPlayer: function() {
 		this.player = new entities_Player(0,Framework.vis.canvas.height / 2);
@@ -103,6 +106,9 @@ Game.prototype = {
 	}
 	,addEntity: function(_entity) {
 		this.entities.push(_entity);
+	}
+	,addScore: function(_amount) {
+		this.score += _amount;
 	}
 	,__class__: Game
 };
@@ -298,6 +304,7 @@ entities_Enemy.prototype = $extend(entities_Entity.prototype,{
 	,update: function(dt) {
 		if(this.health <= 0) {
 			this.dead = true;
+			Framework.game.addScore(1);
 			return;
 		}
 		this.shot_timer -= dt;

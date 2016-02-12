@@ -1,1 +1,2 @@
 - Give explanations on how to compile the project somewhere - Either in lesson 0 or lesson 1.
+- Any text looks horrible due to low-scale canvas - Either investigate upscaling a lower-sized virtual canvas, or getting a better font to display at low-res
