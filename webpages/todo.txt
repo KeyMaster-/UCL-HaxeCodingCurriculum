@@ -1,0 +1,1 @@
+- Give explanations on how to compile the project somewhere - Either in lesson 0 or lesson 1.
