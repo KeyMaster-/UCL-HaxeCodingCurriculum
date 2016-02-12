@@ -111,14 +111,15 @@
 
 				What we want to do here is to allow our ship to move if we press certain keys. For instance, if we press the up arrow key, the ship should move upwards.<br>
 				In order to achieve this, we need two variables called   <code>move_x</code>  and  <code>move_y</code>.<br>
-				These will store the integer values that make our ship move along the x or y axis of the screen.<br><br>
+				These will store the integer values that make our ship move along the x or y axis of the screen.<br>
+				For example, setting this value to <code>1</code> will make the ship move 1 unit along the x or y axis.<br><br>
 
 				Then we need to determine if a player is pressing the keys we want them to press.<br>
 				To do this we use the function 
 				<pre class="prettyprint"><code class="language-haxe">Framework.input.keydown(n)</code></pre>
 				<p>
-				Where <code>n</code> is a number representing a key.<br>
-				Do some googling to figure out which numbers correspond to the keys you want to use.<br><br>
+				Where <code>n</code> is a number representing a keycode for a specific key on your keyboard.<br>
+				Do some googling to figure out which keycodes correspond to the keys you want to use.<br><br>
 
 				Finally, use your knowledge of If Statements to make the ship move left, right, up and down if the player presses the right keys. <br><br>
 
