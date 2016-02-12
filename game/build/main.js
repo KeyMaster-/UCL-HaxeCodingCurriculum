@@ -37,17 +37,18 @@ var Game = function() {
 	this.gameover = false;
 	this.enemy_spawn_interval = 2.0;
 	this.enemy_timer = 0;
-	this.entities = [];
-	this.player = new entities_Player(0,Framework.vis.canvas.height / 2);
-	this.player.rect.y -= this.player.rect.h / 2;
-	this.addEntity(this.player);
+	this.reset();
 };
 Game.__name__ = true;
 Game.prototype = {
 	update: function(dt) {
 		Framework.vis.clear();
 		if(this.gameover) {
-			Framework.vis.text("Game over!",Framework.vis.canvas.width / 2,Framework.vis.canvas.height / 2,"#ffffff",20,"middle","center");
+			Framework.vis.text("Game over! Press enter to restart.",Framework.vis.canvas.width / 2,Framework.vis.canvas.height / 2,"#ffffff",20,"middle","center");
+			if(Framework.input.keydown(13)) {
+				this.reset();
+				this.gameover = false;
+			}
 			return;
 		}
 		this.enemy_timer -= dt;
@@ -81,6 +82,24 @@ Game.prototype = {
 			}
 		}
 		if(this.player.dead) this.gameover = true;
+	}
+	,reset: function() {
+		if(this.entities != null) {
+			var _g = 0;
+			var _g1 = this.entities;
+			while(_g < _g1.length) {
+				var entity = _g1[_g];
+				++_g;
+				entity.destroy();
+			}
+		}
+		this.entities = [];
+		this.initPlayer();
+	}
+	,initPlayer: function() {
+		this.player = new entities_Player(0,Framework.vis.canvas.height / 2);
+		this.player.rect.y -= this.player.rect.h / 2;
+		this.addEntity(this.player);
 	}
 	,addEntity: function(_entity) {
 		this.entities.push(_entity);
@@ -176,6 +195,14 @@ Vector.prototype = {
 	}
 	,normalise: function() {
 		return this.divide_scalar(Math.sqrt(this.x * this.x + this.y * this.y));
+	}
+	,get_angle: function() {
+		return Math.atan2(this.y,this.x);
+	}
+	,set_angle: function(angle) {
+		var len = Math.sqrt(this.x * this.x + this.y * this.y);
+		this.set_xy(Math.cos(angle) * len,Math.sin(angle) * len);
+		return angle;
 	}
 	,get_length: function() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -308,6 +335,30 @@ entities_EntityTag.PlayerBullet.__enum__ = entities_EntityTag;
 entities_EntityTag.EnemyBullet = ["EnemyBullet",3];
 entities_EntityTag.EnemyBullet.toString = $estr;
 entities_EntityTag.EnemyBullet.__enum__ = entities_EntityTag;
+var entities_Missile = function(_x,_y,_player) {
+	this.steering_impulse = 600;
+	this.speed = 250;
+	entities_Entity.call(this,_x,_y,10,10);
+	this.player = _player;
+	this.velocity = new Vector(-this.speed,0);
+};
+entities_Missile.__name__ = true;
+entities_Missile.__super__ = entities_Entity;
+entities_Missile.prototype = $extend(entities_Entity.prototype,{
+	draw: function() {
+		Framework.vis.box(this.rect.x,this.rect.y,this.rect.w,this.rect.h);
+	}
+	,update: function(dt) {
+		var player_pos = new Vector(this.player.rect.x + this.player.rect.w / 2,this.player.rect.y + this.player.rect.h / 2);
+		var our_pos = new Vector(this.rect.x,this.rect.y);
+		var to_player = player_pos.subtract(our_pos);
+		to_player.set_length(this.steering_impulse * dt);
+		this.velocity.add(to_player);
+		if(this.velocity.get_length() > this.speed) this.velocity.set_length(this.speed);
+		this.rect.move(this.velocity.x * dt,this.velocity.y * dt);
+	}
+	,__class__: entities_Missile
+});
 var entities_Player = function(_x,_y) {
 	this.health = 10;
 	this.shot_delay = 0.2;

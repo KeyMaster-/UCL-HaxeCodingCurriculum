@@ -4,6 +4,7 @@ import entities.Entity;
 import entities.Player;
 import entities.Enemy;
 import entities.Bullet;
+import entities.Missile;
 
 class Game {
     var entities:Array<Entity>;
@@ -15,10 +16,7 @@ class Game {
     var gameover:Bool = false;
 
     public function new() {
-        entities = [];
-        player = new Player(0, Framework.vis.canvas_height / 2);
-        player.rect.y -= player.rect.h / 2;
-        addEntity(player); //Add the player so it receives updates and collides with enemy bullets
+        reset();
     }
 
     //:todo:note: Useful website for finding keycodes: http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
@@ -28,7 +26,11 @@ class Game {
         Framework.vis.clear();
 
         if(gameover) {
-            Framework.vis.text("Game over!", Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2, '#ffffff', 20, 'middle', 'center');
+            Framework.vis.text("Game over! Press enter to restart.", Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2, '#ffffff', 20, 'middle', 'center');
+            if(Framework.input.keydown(13)) { //On enter, Restart the game
+                reset();
+                gameover = false;
+            }
             return;
         }
             //Spawn new enemies
@@ -68,6 +70,22 @@ class Game {
             gameover = true;
 
         }
+    }
+
+    function reset() {
+        if(entities != null) {
+            for(entity in entities) {
+                entity.destroy();
+            }    
+        }
+        entities = [];
+        initPlayer();
+    }
+
+    function initPlayer() {
+        player = new Player(0, Framework.vis.canvas_height / 2);
+        player.rect.y -= player.rect.h / 2;
+        addEntity(player); //Add the player so it receives updates and collides with enemy bullets
     }
 
     public function addEntity(_entity:Entity) {

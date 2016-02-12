@@ -5,6 +5,7 @@ class Vector {
     public var y:Float;
 
     public var length(get, set):Float;
+    public var angle(get, set):Float;
 
     public function new(_x:Float = 0, _y:Float = 0) {
         x = _x;
@@ -56,6 +57,16 @@ class Vector {
 
     public function normalise():Vector {
         return divide_scalar(length);
+    }
+
+    inline function get_angle():Float {
+        return Math.atan2(y, x);
+    }
+
+    inline function set_angle(angle:Float):Float {
+        var len = length;
+        set_xy(Math.cos(angle) * len, Math.sin(angle) * len);
+        return angle;
     }
 
     inline function get_length():Float {
