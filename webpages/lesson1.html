@@ -34,7 +34,7 @@
 		<div id="content">
 			<div class="title">
 				<h2>Lesson 1</h2>
-				<span class="byline">Variables. Data types.</span> 
+				<span class="byline">Data Types, Variables and If Statements</span> 
 			</div>
 				<p>	The main function of any computer program is to collect, store and process data in one way or another. Therefore before learning anything else, we need to understand what Data Types and Variables are, as these are key to knowing how to process data. </p>
 
@@ -75,27 +75,57 @@
 				<p>Notice we do not need to use the keyword <code>var</code> or specify a type again as we have already declared the variable and given it name which we can use to refer to it later in the program.</p>
 
 				<br><br>	
+
+				<h3>If Statements</h3><br>
+
+				<p> 
+				One of the most useful tools we have as programmers are known as If Statements. <br>
+				If statements are used when we only want lines of code to be executed if a condition is met. For example, we would only want the game over screen to appear if the player has reacher 0 hit points. <br>
+				Here is how that would look like in Haxe: <br>
+				<pre class="prettyprint"><code class="language-haxe">if (health <= 0){<br>    gameOver(); <br>}</code></pre>
+
+				<p>In this case we use the keyword <code>if</code> followed by a condition thats surrounded by round brackets <code>(  )</code>.<br>
+				We then put all the code we want to execute if the condition is true, after the condition surrounded by curly brackets <code>{  }</code>.<br><br>
+
+				But what do we do if the condition is not true?<br>
+
+				This is where we use the <code>else</code> keyword. This will execute the code after the <code>else</code> keyword if the original <code>if</code> condition is not met.<br>
+				
+				<pre class="prettyprint"><code class="language-haxe">if (health <= 0){<br>    gameOver(); <br>}<br>else{<br>    keepPlaying();<br>}</code></pre><br>
+
+				We can also have multiple if statements in a row in case we need to set multiple conditions.	
+
+				<pre class="prettyprint"><code class="language-haxe">if (health <= 0){<br>    gameOver(); <br>}<br>else if (health < 10){<br>    flashScreen();<br>    keepPlaying();<br>}</code></pre><br>
+
+				In this case the program checks the first condition, if that is not met then it moves on to the next condition, and so on.<br><br>
+
+				</p>
+				</p>
+
 				<h2>Exercise 1</h2><br>
 
-
-				<p>For the first exercise, we will demonstrate variables and data types in action by using them in our game. <br><br>
+				<p>Now lets put what we've learned to use in our game.<br><br>
 
 				To start, open the file <code>Player.hx</code> in your favourite text editor. <br>
-				Then go to lines 31-45. This section deals with our ships movement. <br>
-				On line 31 we declare a new variable <code>move</code> as a <code>new Vector(x, y)</code>. <br>
-				You'll learn later on what this means, but for now assume that a Vector has two values, an <code>x</code> and a <code>y</code>. <br><br>
+				Then go to line 31. This section of code is going to deal with our ships movement. <br><br>
 
-				As you can see there are a bunch of lines that start with <code>if</code> or <code>else if</code>, these are followed by a <code>Framework.input.keydown</code>.<br>
-				These detect whether the up, down, left or right arrow keys have been pressed. <br>
-				The <code>x</code> and <code>y</code> values are then changed accordingly.<br><br>
+				What we want to do here is to allow our ship to move if we press certain keys. For instance, if we press the up arrow key, the ship should move upwards.<br>
+				In order to achieve this, we need two variables called   <code>move_x</code>  and  <code>move_y</code>.<br>
+				These will store the integer values that make our ship move along the x or y axis of the screen.<br><br>
 
-				Your task here is to play around with the values, change them and see how this affects the ships movement speed.
+				Then we need to determine if a player is pressing the keys we want them to press.<br>
+				To do this we use the function 
+				<pre class="prettyprint"><code class="language-haxe">Framework.input.keydown(n)</code></pre>
+				<p>
+				Where <code>n</code> is a number representing a key.<br>
+				Do some googling to figure out which numbers correspond to the keys you want to use.<br><br>
 
+				Finally, use your knowledge of If Statements to make the ship move left, right, up and down if the player presses the right keys. <br><br>
 
-
-
+				<i>Hint: You may need two sets of If Statements. One for left and right movements and the other for up and down movements.</i>
 
 			</p>	
+			</p>
 
 		</div>
 		<div id="sidebar">
