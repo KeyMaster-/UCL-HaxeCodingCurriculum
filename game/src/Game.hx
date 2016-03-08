@@ -2,9 +2,8 @@ package ;
 import js.Browser;
 import entities.Entity;
 import entities.Player;
-import entities.Enemy;
-import entities.Bullet;
 import entities.Missile;
+import entities.Target;
 
 class Game {
     var entities:Array<Entity>;
@@ -15,6 +14,8 @@ class Game {
     var enemy_spawn_interval:Float = 2.0;
 
     var gameover:Bool = false;
+
+    var target:Target;
 
     public function new() {
         reset();
@@ -34,13 +35,9 @@ class Game {
             }
             return;
         }
-            //Spawn new enemies
-        enemy_timer -= dt;
-        if(enemy_timer <= 0) {
-            var enemy = new Enemy(Framework.vis.canvas_width, 0, player);
-            enemy.rect.y = Math.random() * (Framework.vis.canvas_height - enemy.rect.h);
-            entities.push(enemy);
-            enemy_timer = enemy_spawn_interval;
+
+        if(target.dead) {
+            renewTarget();
         }
 
         var i:Int = entities.length;
@@ -58,7 +55,7 @@ class Game {
             }
 
             for(other_entity in entities) {
-                if(other_entity == entity) continue; //Skip over the entity we're currently at
+                if(other_entity == entity) continue; //Skip over the entity we're currently at, an entity colliding with itself doesn't make sense
                 if(!other_entity.dead && other_entity.rect.overlaps(entity.rect)) {
                     //Notify both entities of their collision
                     other_entity.collided(entity);
@@ -83,12 +80,25 @@ class Game {
         entities = [];
         initPlayer();
         score = 0;
+
+        renewTarget();
+
+    }
+
+    function renewTarget() {
+       target =  new Target(0, 0);
+        target.rect.x = Math.random() * (Framework.vis.canvas_width - target.rect.w);
+        target.rect.y = Math.random() * (Framework.vis.canvas_height - target.rect.h);
+        addEntity(target);
     }
 
     function initPlayer() {
-        player = new Player(0, Framework.vis.canvas_height / 2);
+        player = new Player(Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2);
         player.rect.y -= player.rect.h / 2;
+        player.rect.x -= player.rect.w / 2;
         addEntity(player); //Add the player so it receives updates and collides with enemy bullets
+        var missile = new Missile(Framework.vis.canvas_width / 2, 0, player);
+        addEntity(missile);
     }
 
     public function addEntity(_entity:Entity) {

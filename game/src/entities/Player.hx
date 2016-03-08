@@ -7,27 +7,17 @@ class Player extends Entity {
     var last_shot_time:Float = 0;
     var shot_delay:Float = 0.2;
 
-    var image:Image;
-
-    public var health:Int = 10;
-
     public function new(_x:Float, _y:Float) {
         tag = EntityTag.Player;
-        image = Framework.vis.get_image('player_ship');
-        super(_x, _y, image.width, image.height);
+        super(_x, _y, 16, 16);
     }
 
     override public function draw() {
-        Framework.vis.image(image, rect.x, rect.y);
-        Framework.vis.text('Health: $health', 10, 10);
+        Framework.vis.box(rect.x, rect.y, rect.w, rect.h, '#75D974');
     }
 
     //:todo:lesson: Conditionals; Variables; Normalising vectors
     override public function update(dt:Float) {
-        if(health <= 0) {
-            dead = true;
-            return;
-        }
         var move = new Vector(0, 0);
         if(Framework.input.keydown(39)) { //right
             move.x = 1;
@@ -46,21 +36,13 @@ class Player extends Entity {
         move.length = speed * dt; //Make sure we always move at the same speed, even when moving diagonally
         rect.move(move.x, move.y);
 
-        rect.x = clamp(rect.x, 0, Framework.vis.canvas_width - rect.w);
-        rect.y = clamp(rect.y, 0, Framework.vis.canvas_height - rect.h);
-
-        if(Framework.input.keydown(32)) {
-            if(Framework.time - last_shot_time > shot_delay) {
-                var bullet = new Bullet(rect.x + rect.w, rect.y + rect.h / 2, 500, 0, true);
-                bullet.rect.y -= bullet.rect.h / 2;
-                Framework.game.addEntity(bullet);
-                last_shot_time = Framework.time;
-            }
-        }
+        rect.x = Util.clamp(rect.x, 0, Framework.vis.canvas_width - rect.w);
+        rect.y = Util.clamp(rect.y, 0, Framework.vis.canvas_height - rect.h);
     }
 
-        //:todo: potentially move to different class
-    function clamp(value:Float, lower:Float, upper:Float):Float {
-        return value < lower ? lower : (value > upper ? upper : value);
+    override public function collided(_other:Entity):Void {
+        if(_other.tag == EntityTag.Target) {
+            dead = true;
+        }
     }
 }

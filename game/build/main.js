@@ -1,4 +1,4 @@
-(function (console, $global) { "use strict";
+(function (console) { "use strict";
 var $estr = function() { return js_Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
@@ -31,7 +31,6 @@ Framework.prototype = {
 		Framework.game.update(dt);
 		this.run($bind(this,this.update));
 	}
-	,__class__: Framework
 };
 var Game = function() {
 	this.gameover = false;
@@ -52,13 +51,7 @@ Game.prototype = {
 			}
 			return;
 		}
-		this.enemy_timer -= dt;
-		if(this.enemy_timer <= 0) {
-			var enemy = new entities_Enemy(Framework.vis.canvas.width,0,this.player);
-			enemy.rect.y = Math.random() * (Framework.vis.canvas.height - enemy.rect.h);
-			this.entities.push(enemy);
-			this.enemy_timer = this.enemy_spawn_interval;
-		}
+		if(this.target.dead) this.renewTarget();
 		var i = this.entities.length;
 		while(i > 0) {
 			i--;
@@ -98,11 +91,21 @@ Game.prototype = {
 		this.entities = [];
 		this.initPlayer();
 		this.score = 0;
+		this.renewTarget();
+	}
+	,renewTarget: function() {
+		this.target = new entities_Target(0,0);
+		this.target.rect.x = Math.random() * (Framework.vis.canvas.width - this.target.rect.w);
+		this.target.rect.y = Math.random() * (Framework.vis.canvas.height - this.target.rect.h);
+		this.addEntity(this.target);
 	}
 	,initPlayer: function() {
-		this.player = new entities_Player(0,Framework.vis.canvas.height / 2);
+		this.player = new entities_Player(Framework.vis.canvas.width / 2,Framework.vis.canvas.height / 2);
 		this.player.rect.y -= this.player.rect.h / 2;
+		this.player.rect.x -= this.player.rect.w / 2;
 		this.addEntity(this.player);
+		var missile = new entities_Missile(Framework.vis.canvas.width / 2,0,this.player);
+		this.addEntity(missile);
 	}
 	,addEntity: function(_entity) {
 		this.entities.push(_entity);
@@ -110,7 +113,6 @@ Game.prototype = {
 	,addScore: function(_amount) {
 		this.score += _amount;
 	}
-	,__class__: Game
 };
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
@@ -145,12 +147,11 @@ Rect.prototype = {
 	,overlaps: function(other) {
 		return other.x < this.x + this.w && this.x < other.x + other.w && other.y < this.y + this.h && this.y < other.y + other.h;
 	}
-	,__class__: Rect
 };
-var Std = function() { };
-Std.__name__ = true;
-Std.string = function(s) {
-	return js_Boot.__string_rec(s,"");
+var Util = function() { };
+Util.__name__ = true;
+Util.clamp = function(_value,_min,_max) {
+	if(_value < _min) return _min; else if(_value > _max) return _max; else return _value;
 };
 var Vector = function(_x,_y) {
 	if(_y == null) _y = 0;
@@ -217,7 +218,6 @@ Vector.prototype = {
 		this.normalise().multiply_scalar(v);
 		return v;
 	}
-	,__class__: Vector
 };
 var entities_Entity = function(_x,_y,_w,_h) {
 	this.dead = false;
@@ -234,117 +234,17 @@ entities_Entity.prototype = {
 	,destroy: function() {
 		this.rect = null;
 	}
-	,__class__: entities_Entity
 };
-var entities_Bullet = function(_x,_y,_speed_x,_speed_y,_friendly) {
-	this.damage = 1;
-	var image_name = "";
-	if(_friendly) {
-		this.tag = entities_EntityTag.PlayerBullet;
-		image_name = "player_bullet";
-	} else {
-		this.tag = entities_EntityTag.EnemyBullet;
-		image_name = "enemy_bullet";
-	}
-	this.image = Framework.vis.get_image(image_name);
-	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
-	this.speed = new Vector(_speed_x,_speed_y);
-};
-entities_Bullet.__name__ = true;
-entities_Bullet.__super__ = entities_Entity;
-entities_Bullet.prototype = $extend(entities_Entity.prototype,{
-	draw: function() {
-		Framework.vis.image(this.image,this.rect.x,this.rect.y);
-	}
-	,update: function(dt) {
-		this.rect.move(this.speed.x * dt,this.speed.y * dt);
-		if(this.rect.x < -this.rect.w || this.rect.x > Framework.vis.canvas.width || this.rect.y < -this.rect.h || this.rect.y > Framework.vis.canvas.height) this.dead = true;
-	}
-	,collided: function(other) {
-		if(this.tag == entities_EntityTag.PlayerBullet && other.tag == entities_EntityTag.Enemy) {
-			var enemy;
-			enemy = js_Boot.__cast(other , entities_Enemy);
-			enemy.health -= this.damage;
-			this.dead = true;
-		} else if(this.tag == entities_EntityTag.EnemyBullet && other.tag == entities_EntityTag.Player) {
-			var player;
-			player = js_Boot.__cast(other , entities_Player);
-			player.health -= this.damage;
-			this.dead = true;
-		}
-	}
-	,destroy: function() {
-		entities_Entity.prototype.destroy.call(this);
-		this.speed = null;
-	}
-	,__class__: entities_Bullet
-});
-var entities_Enemy = function(_x,_y,_player) {
-	this.added_shot_time_range = 1;
-	this.min_shot_time = 2;
-	this.shot_speed = 100;
-	this.speed = 100;
-	this.health = 4;
-	this.tag = entities_EntityTag.Enemy;
-	this.player = _player;
-	this.image = Framework.vis.get_image("enemy_ship");
-	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
-	this.shot_timer = this.min_shot_time + Math.random() * this.added_shot_time_range;
-	this.move_direction = new Vector();
-	this.target_position = new Vector(0,0);
-	this.minimum_x = Framework.vis.canvas.width * 0.66666666666666663;
-	this.target_range_x = Framework.vis.canvas.width - this.minimum_x - this.rect.w;
-};
-entities_Enemy.__name__ = true;
-entities_Enemy.__super__ = entities_Entity;
-entities_Enemy.prototype = $extend(entities_Entity.prototype,{
-	draw: function() {
-		Framework.vis.image(this.image,this.rect.x,this.rect.y);
-	}
-	,update: function(dt) {
-		if(this.health <= 0) {
-			this.dead = true;
-			Framework.game.addScore(1);
-			return;
-		}
-		this.shot_timer -= dt;
-		if(this.shot_timer <= 0) {
-			var shot_dir = new Vector(this.player.rect.x + this.player.rect.w / 2,this.player.rect.y + this.player.rect.h / 2);
-			shot_dir.subtract(new Vector(this.rect.x,this.rect.y + this.rect.w / 2));
-			shot_dir.set_length(this.shot_speed);
-			var bullet = new entities_Bullet(this.rect.x + this.rect.w / 2,this.rect.y + this.rect.h / 2,shot_dir.x,shot_dir.y,false);
-			Framework.game.addEntity(bullet);
-			this.shot_timer = this.min_shot_time + Math.random() * this.added_shot_time_range;
-		}
-		this.rect.x += dt * this.move_direction.x;
-		this.rect.y += dt * this.move_direction.y;
-		var difference = this.target_position.clone();
-		difference.subtract(new Vector(this.rect.x,this.rect.y));
-		if(Math.sqrt(difference.x * difference.x + difference.y * difference.y) < 5 || this.move_direction.x == 0 && this.move_direction.y == 0) {
-			this.target_position.set_xy(Math.random() * this.target_range_x + this.minimum_x,Math.random() * (Framework.vis.canvas.height - this.rect.h));
-			this.move_direction.copy_from(this.target_position);
-			this.move_direction.subtract(new Vector(this.rect.x,this.rect.y));
-			this.move_direction.set_length(this.speed);
-		}
-	}
-	,__class__: entities_Enemy
-});
-var entities_EntityTag = { __ename__ : true, __constructs__ : ["Player","Enemy","PlayerBullet","EnemyBullet"] };
+var entities_EntityTag = { __ename__ : true, __constructs__ : ["Player","Target"] };
 entities_EntityTag.Player = ["Player",0];
 entities_EntityTag.Player.toString = $estr;
 entities_EntityTag.Player.__enum__ = entities_EntityTag;
-entities_EntityTag.Enemy = ["Enemy",1];
-entities_EntityTag.Enemy.toString = $estr;
-entities_EntityTag.Enemy.__enum__ = entities_EntityTag;
-entities_EntityTag.PlayerBullet = ["PlayerBullet",2];
-entities_EntityTag.PlayerBullet.toString = $estr;
-entities_EntityTag.PlayerBullet.__enum__ = entities_EntityTag;
-entities_EntityTag.EnemyBullet = ["EnemyBullet",3];
-entities_EntityTag.EnemyBullet.toString = $estr;
-entities_EntityTag.EnemyBullet.__enum__ = entities_EntityTag;
+entities_EntityTag.Target = ["Target",1];
+entities_EntityTag.Target.toString = $estr;
+entities_EntityTag.Target.__enum__ = entities_EntityTag;
 var entities_Missile = function(_x,_y,_player) {
-	this.steering_impulse = 600;
-	this.speed = 250;
+	this.steering_impulse = 800;
+	this.speed = 300;
 	entities_Entity.call(this,_x,_y,10,10);
 	this.player = _player;
 	this.velocity = new Vector(-this.speed,0);
@@ -363,50 +263,64 @@ entities_Missile.prototype = $extend(entities_Entity.prototype,{
 		this.velocity.add(to_player);
 		if(this.velocity.get_length() > this.speed) this.velocity.set_length(this.speed);
 		this.rect.move(this.velocity.x * dt,this.velocity.y * dt);
+		if(this.rect.x < 0 || this.rect.x > Framework.vis.canvas.width - this.rect.w || this.rect.y < 0 || this.rect.y > Framework.vis.canvas.height - this.rect.h) {
+			this.rect.x = Util.clamp(this.rect.x,0,Framework.vis.canvas.width - this.rect.w);
+			this.rect.y = Util.clamp(this.rect.y,0,Framework.vis.canvas.height - this.rect.h);
+			this.velocity.multiply_scalar(-1);
+		}
 	}
-	,__class__: entities_Missile
+	,collided: function(_other) {
+		console.log(_other);
+		var _g = _other.tag;
+		switch(_g[1]) {
+		case 0:
+			_other.dead = true;
+			this.dead = true;
+			break;
+		case 1:
+			_other.dead = true;
+			Framework.game.addScore(1);
+			this.velocity.multiply_scalar(-1);
+			break;
+		}
+	}
 });
 var entities_Player = function(_x,_y) {
-	this.health = 10;
 	this.shot_delay = 0.2;
 	this.last_shot_time = 0;
 	this.speed = 200;
 	this.tag = entities_EntityTag.Player;
-	this.image = Framework.vis.get_image("player_ship");
-	entities_Entity.call(this,_x,_y,this.image.image_element.width,this.image.image_element.height);
+	entities_Entity.call(this,_x,_y,16,16);
 };
 entities_Player.__name__ = true;
 entities_Player.__super__ = entities_Entity;
 entities_Player.prototype = $extend(entities_Entity.prototype,{
 	draw: function() {
-		Framework.vis.image(this.image,this.rect.x,this.rect.y);
-		Framework.vis.text("Health: " + this.health,10,10);
+		Framework.vis.box(this.rect.x,this.rect.y,this.rect.w,this.rect.h,"#75D974");
 	}
 	,update: function(dt) {
-		if(this.health <= 0) {
-			this.dead = true;
-			return;
-		}
 		var move = new Vector(0,0);
 		if(Framework.input.keydown(39)) move.x = 1; else if(Framework.input.keydown(37)) move.x = -1;
 		if(Framework.input.keydown(38)) move.y = -1; else if(Framework.input.keydown(40)) move.y = 1;
 		move.set_length(this.speed * dt);
 		this.rect.move(move.x,move.y);
-		this.rect.x = this.clamp(this.rect.x,0,Framework.vis.canvas.width - this.rect.w);
-		this.rect.y = this.clamp(this.rect.y,0,Framework.vis.canvas.height - this.rect.h);
-		if(Framework.input.keydown(32)) {
-			if(Framework.get_time() - this.last_shot_time > this.shot_delay) {
-				var bullet = new entities_Bullet(this.rect.x + this.rect.w,this.rect.y + this.rect.h / 2,500,0,true);
-				bullet.rect.y -= bullet.rect.h / 2;
-				Framework.game.addEntity(bullet);
-				this.last_shot_time = Framework.get_time();
-			}
-		}
+		this.rect.x = Util.clamp(this.rect.x,0,Framework.vis.canvas.width - this.rect.w);
+		this.rect.y = Util.clamp(this.rect.y,0,Framework.vis.canvas.height - this.rect.h);
 	}
-	,clamp: function(value,lower,upper) {
-		if(value < lower) return lower; else if(value > upper) return upper; else return value;
+	,collided: function(_other) {
+		if(_other.tag == entities_EntityTag.Target) this.dead = true;
 	}
-	,__class__: entities_Player
+});
+var entities_Target = function(_x,_y) {
+	entities_Entity.call(this,_x,_y,16,16);
+	this.tag = entities_EntityTag.Target;
+};
+entities_Target.__name__ = true;
+entities_Target.__super__ = entities_Entity;
+entities_Target.prototype = $extend(entities_Entity.prototype,{
+	draw: function() {
+		Framework.vis.box(this.rect.x,this.rect.y,this.rect.w,this.rect.h,"#D94B41");
+	}
 });
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
@@ -415,9 +329,6 @@ var haxe_ds_IntMap = function() {
 };
 haxe_ds_IntMap.__name__ = true;
 haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
-haxe_ds_IntMap.prototype = {
-	__class__: haxe_ds_IntMap
-};
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
@@ -438,7 +349,6 @@ haxe_ds_StringMap.prototype = {
 	,getReserved: function(key) {
 		if(this.rh == null) return null; else return this.rh["$" + key];
 	}
-	,__class__: haxe_ds_StringMap
 };
 var haxe_io_Path = function(path) {
 	switch(path) {
@@ -481,30 +391,9 @@ haxe_io_Path.prototype = {
 	toString: function() {
 		return (this.dir == null?"":this.dir + (this.backslash?"\\":"/")) + this.file + (this.ext == null?"":"." + this.ext);
 	}
-	,__class__: haxe_io_Path
 };
-var js__$Boot_HaxeError = function(val) {
-	Error.call(this);
-	this.val = val;
-	this.message = String(val);
-	if(Error.captureStackTrace) Error.captureStackTrace(this,js__$Boot_HaxeError);
-};
-js__$Boot_HaxeError.__name__ = true;
-js__$Boot_HaxeError.__super__ = Error;
-js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
-	__class__: js__$Boot_HaxeError
-});
 var js_Boot = function() { };
 js_Boot.__name__ = true;
-js_Boot.getClass = function(o) {
-	if((o instanceof Array) && o.__enum__ == null) return Array; else {
-		var cl = o.__class__;
-		if(cl != null) return cl;
-		var name = js_Boot.__nativeClassName(o);
-		if(name != null) return js_Boot.__resolveNativeClass(name);
-		return null;
-	}
-};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -541,7 +430,6 @@ js_Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		} catch( e ) {
-			if (e instanceof js__$Boot_HaxeError) e = e.val;
 			return "???";
 		}
 		if(tostr != null && tostr != Object.toString && typeof(tostr) == "function") {
@@ -573,64 +461,6 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-js_Boot.__interfLoop = function(cc,cl) {
-	if(cc == null) return false;
-	if(cc == cl) return true;
-	var intf = cc.__interfaces__;
-	if(intf != null) {
-		var _g1 = 0;
-		var _g = intf.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var i1 = intf[i];
-			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) return true;
-		}
-	}
-	return js_Boot.__interfLoop(cc.__super__,cl);
-};
-js_Boot.__instanceof = function(o,cl) {
-	if(cl == null) return false;
-	switch(cl) {
-	case Int:
-		return (o|0) === o;
-	case Float:
-		return typeof(o) == "number";
-	case Bool:
-		return typeof(o) == "boolean";
-	case String:
-		return typeof(o) == "string";
-	case Array:
-		return (o instanceof Array) && o.__enum__ == null;
-	case Dynamic:
-		return true;
-	default:
-		if(o != null) {
-			if(typeof(cl) == "function") {
-				if(o instanceof cl) return true;
-				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) return true;
-			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
-				if(o instanceof cl) return true;
-			}
-		} else return false;
-		if(cl == Class && o.__name__ != null) return true;
-		if(cl == Enum && o.__ename__ != null) return true;
-		return o.__enum__ == cl;
-	}
-};
-js_Boot.__cast = function(o,t) {
-	if(js_Boot.__instanceof(o,t)) return o; else throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
-};
-js_Boot.__nativeClassName = function(o) {
-	var name = js_Boot.__toStr.call(o).slice(8,-1);
-	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
-	return name;
-};
-js_Boot.__isNativeObj = function(o) {
-	return js_Boot.__nativeClassName(o) != null;
-};
-js_Boot.__resolveNativeClass = function(name) {
-	return $global[name];
-};
 var systems_Input = function() {
 	this.pressed = new haxe_ds_IntMap();
 	window.document.onkeydown = $bind(this,this.onkeydown);
@@ -647,7 +477,6 @@ systems_Input.prototype = {
 	,keydown: function(keycode) {
 		if(this.pressed.h.hasOwnProperty(keycode)) return this.pressed.h[keycode]; else return false;
 	}
-	,__class__: systems_Input
 };
 var systems_Vis = function() {
 	this.canvas = window.document.getElementById("gameview");
@@ -699,7 +528,6 @@ systems_Vis.prototype = {
 	,get_canvas_height: function() {
 		return this.canvas.height;
 	}
-	,__class__: systems_Vis
 };
 var systems_Image = function(_image_element) {
 	this.image_element = _image_element;
@@ -712,23 +540,12 @@ systems_Image.prototype = {
 	,get_height: function() {
 		return this.image_element.height;
 	}
-	,__class__: systems_Image
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
-String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
-var Int = { __name__ : ["Int"]};
-var Dynamic = { __name__ : ["Dynamic"]};
-var Float = Number;
-Float.__name__ = ["Float"];
-var Bool = Boolean;
-Bool.__ename__ = ["Bool"];
-var Class = { __name__ : ["Class"]};
-var Enum = { };
 var __map_reserved = {}
 Framework.start_time = 0;
-js_Boot.__toStr = {}.toString;
 Main.main();
-})(typeof console != "undefined" ? console : {log:function(){}}, typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
+})(typeof console != "undefined" ? console : {log:function(){}});
