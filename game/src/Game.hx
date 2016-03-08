@@ -23,7 +23,6 @@ class Game {
 
     //:todo:note: Useful website for finding keycodes: http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
 
-    //:todo:lesson: Loops;
     public function update(dt:Float) {
         Framework.vis.clear();
 
@@ -40,6 +39,7 @@ class Game {
             renewTarget();
         }
 
+            //:todo:lesson: Loops;
         var i:Int = entities.length;
         while(i > 0) {
             i--;
@@ -57,7 +57,7 @@ class Game {
             for(other_entity in entities) {
                 if(other_entity == entity) continue; //Skip over the entity we're currently at, an entity colliding with itself doesn't make sense
                 if(!other_entity.dead && other_entity.rect.overlaps(entity.rect)) {
-                    //Notify both entities of their collision
+                        //Notify both entities of their collision
                     other_entity.collided(entity);
                     entity.collided(other_entity);
                 }
@@ -68,7 +68,7 @@ class Game {
             gameover = true;
         }
 
-        Framework.vis.text('Score: $score', Framework.vis.canvas_width - 10, 10, '#ffffff', 20, 'top', 'right');
+        Framework.vis.text('Score: $score', Framework.vis.canvas_width / 2, 30, '#ffffff', 20, 'center', 'center');
     }
 
     function reset() {
@@ -86,7 +86,9 @@ class Game {
     }
 
     function renewTarget() {
-       target =  new Target(0, 0);
+                //lesson note: This has the chance of spawning a target on top of the player, instantly killing them. 
+                //We won't fix it here, but it's an extension the learner could do.
+        target =  new Target(0, 0);
         target.rect.x = Math.random() * (Framework.vis.canvas_width - target.rect.w);
         target.rect.y = Math.random() * (Framework.vis.canvas_height - target.rect.h);
         addEntity(target);

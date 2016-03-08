@@ -44,7 +44,7 @@ Game.prototype = {
 	update: function(dt) {
 		Framework.vis.clear();
 		if(this.gameover) {
-			Framework.vis.text("Game over! Press enter to restart.",Framework.vis.canvas.width / 2,Framework.vis.canvas.height / 2,"#ffffff",20,"middle","center");
+			Framework.vis.text("Game over! Press enter to restart.",Framework.vis.get_canvas_width() / 2,Framework.vis.get_canvas_height() / 2,"#ffffff",20,"middle","center");
 			if(Framework.input.keydown(13)) {
 				this.reset();
 				this.gameover = false;
@@ -76,7 +76,7 @@ Game.prototype = {
 			}
 		}
 		if(this.player.dead) this.gameover = true;
-		Framework.vis.text("Score: " + this.score,Framework.vis.canvas.width - 10,10,"#ffffff",20,"top","right");
+		Framework.vis.text("Score: " + this.score,Framework.vis.get_canvas_width() / 2,30,"#ffffff",20,"center","center");
 	}
 	,reset: function() {
 		if(this.entities != null) {
@@ -95,16 +95,16 @@ Game.prototype = {
 	}
 	,renewTarget: function() {
 		this.target = new entities_Target(0,0);
-		this.target.rect.x = Math.random() * (Framework.vis.canvas.width - this.target.rect.w);
-		this.target.rect.y = Math.random() * (Framework.vis.canvas.height - this.target.rect.h);
+		this.target.rect.x = Math.random() * (Framework.vis.get_canvas_width() - this.target.rect.w);
+		this.target.rect.y = Math.random() * (Framework.vis.get_canvas_height() - this.target.rect.h);
 		this.addEntity(this.target);
 	}
 	,initPlayer: function() {
-		this.player = new entities_Player(Framework.vis.canvas.width / 2,Framework.vis.canvas.height / 2);
+		this.player = new entities_Player(Framework.vis.get_canvas_width() / 2,Framework.vis.get_canvas_height() / 2);
 		this.player.rect.y -= this.player.rect.h / 2;
 		this.player.rect.x -= this.player.rect.w / 2;
 		this.addEntity(this.player);
-		var missile = new entities_Missile(Framework.vis.canvas.width / 2,0,this.player);
+		var missile = new entities_Missile(Framework.vis.get_canvas_width() / 2,0,this.player);
 		this.addEntity(missile);
 	}
 	,addEntity: function(_entity) {
@@ -247,7 +247,7 @@ var entities_Missile = function(_x,_y,_player) {
 	this.speed = 300;
 	entities_Entity.call(this,_x,_y,10,10);
 	this.player = _player;
-	this.velocity = new Vector(-this.speed,0);
+	this.velocity = new Vector(0,0);
 };
 entities_Missile.__name__ = true;
 entities_Missile.__super__ = entities_Entity;
@@ -263,9 +263,9 @@ entities_Missile.prototype = $extend(entities_Entity.prototype,{
 		this.velocity.add(to_player);
 		if(this.velocity.get_length() > this.speed) this.velocity.set_length(this.speed);
 		this.rect.move(this.velocity.x * dt,this.velocity.y * dt);
-		if(this.rect.x < 0 || this.rect.x > Framework.vis.canvas.width - this.rect.w || this.rect.y < 0 || this.rect.y > Framework.vis.canvas.height - this.rect.h) {
-			this.rect.x = Util.clamp(this.rect.x,0,Framework.vis.canvas.width - this.rect.w);
-			this.rect.y = Util.clamp(this.rect.y,0,Framework.vis.canvas.height - this.rect.h);
+		if(this.rect.x < 0 || this.rect.x > Framework.vis.get_canvas_width() - this.rect.w || this.rect.y < 0 || this.rect.y > Framework.vis.get_canvas_height() - this.rect.h) {
+			this.rect.x = Util.clamp(this.rect.x,0,Framework.vis.get_canvas_width() - this.rect.w);
+			this.rect.y = Util.clamp(this.rect.y,0,Framework.vis.get_canvas_height() - this.rect.h);
 			this.velocity.multiply_scalar(-1);
 		}
 	}
@@ -304,8 +304,8 @@ entities_Player.prototype = $extend(entities_Entity.prototype,{
 		if(Framework.input.keydown(38)) move.y = -1; else if(Framework.input.keydown(40)) move.y = 1;
 		move.set_length(this.speed * dt);
 		this.rect.move(move.x,move.y);
-		this.rect.x = Util.clamp(this.rect.x,0,Framework.vis.canvas.width - this.rect.w);
-		this.rect.y = Util.clamp(this.rect.y,0,Framework.vis.canvas.height - this.rect.h);
+		this.rect.x = Util.clamp(this.rect.x,0,Framework.vis.get_canvas_width() - this.rect.w);
+		this.rect.y = Util.clamp(this.rect.y,0,Framework.vis.get_canvas_height() - this.rect.h);
 	}
 	,collided: function(_other) {
 		if(_other.tag == entities_EntityTag.Target) this.dead = true;
@@ -479,9 +479,11 @@ systems_Input.prototype = {
 	}
 };
 var systems_Vis = function() {
+	this.scale_factor = 2;
 	this.canvas = window.document.getElementById("gameview");
 	this.canvas.style.backgroundColor = "#111111";
 	this.ctx = this.canvas.getContext("2d");
+	this.ctx.scale(this.scale_factor,this.scale_factor);
 	this.images = new haxe_ds_StringMap();
 	var img_elements = window.document.getElementsByTagName("img");
 	var _g = 0;
@@ -523,10 +525,10 @@ systems_Vis.prototype = {
 		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 	}
 	,get_canvas_width: function() {
-		return this.canvas.width;
+		return this.canvas.width / this.scale_factor;
 	}
 	,get_canvas_height: function() {
-		return this.canvas.height;
+		return this.canvas.height / this.scale_factor;
 	}
 };
 var systems_Image = function(_image_element) {

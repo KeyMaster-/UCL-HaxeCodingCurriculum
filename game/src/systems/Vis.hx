@@ -14,11 +14,16 @@ class Vis {
 
     var images:Map<String, Image>;
 
+        //A factor by which we multiply the size of the game area to get to the size of the render area
+    var scale_factor:Float = 2; //:todo: maybe avoid all of the scaling logic? Depends on whether we want graphics back at some point
 
     public function new () {
         canvas = cast Browser.document.getElementById('gameview');
         canvas.style.backgroundColor = '#111111';
         ctx = canvas.getContext('2d');
+
+            //Apply a base scale factor to everything
+        ctx.scale(scale_factor, scale_factor);
 
             //initialise images
         images = new Map();
@@ -55,15 +60,15 @@ class Vis {
     }
 
     public function clear() {
-        ctx.clearRect(0, 0, canvas_width, canvas_height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height); //Using canvas attributes directly since we want actual render size, not game area size
     }
 
     inline function get_canvas_width():Float {
-        return canvas.width;
+        return canvas.width / scale_factor;
     }
 
     inline function get_canvas_height():Float {
-        return canvas.height;
+        return canvas.height / scale_factor;
     }
 }
 

@@ -9,7 +9,7 @@ class Missile extends Entity {
     public function new(_x:Float, _y:Float, _player:Player) {
         super(_x, _y, 10, 10);
         player = _player;
-        velocity = new Vector(-speed, 0);
+        velocity = new Vector(0, 0);
     }
 
     override public function draw() {
@@ -43,7 +43,7 @@ class Missile extends Entity {
             case EntityTag.Target:
                 _other.dead = true;
                 Framework.game.addScore(1);
-                
+
                     //Bounce away from targets
                 velocity.multiply_scalar(-1);
 
