@@ -1,5 +1,4 @@
 package entities;
-import systems.Vis.Image;
 
 class Player extends Entity {
     var speed:Float = 200;
@@ -8,12 +7,8 @@ class Player extends Entity {
     var shot_delay:Float = 0.2;
 
     public function new(_x:Float, _y:Float) {
-        tag = EntityTag.Player;
         super(_x, _y, 16, 16);
-    }
-
-    override public function draw() {
-        Framework.vis.box(rect.x, rect.y, rect.w, rect.h, '#75D974');
+        color = '#75D974';
     }
 
     //:todo:lesson: Conditionals; Variables; Normalising vectors
@@ -35,14 +30,8 @@ class Player extends Entity {
 
         move.length = speed * dt; //Make sure we always move at the same speed, even when moving diagonally
         rect.move(move.x, move.y);
-
+            //:todo:lesson: polish
         rect.x = Util.clamp(rect.x, 0, Framework.vis.canvas_width - rect.w);
         rect.y = Util.clamp(rect.y, 0, Framework.vis.canvas_height - rect.h);
-    }
-
-    override public function collided(_other:Entity):Void {
-        if(_other.tag == EntityTag.Target) {
-            dead = true;
-        }
     }
 }
