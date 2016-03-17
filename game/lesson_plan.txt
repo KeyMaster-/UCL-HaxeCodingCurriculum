@@ -8,6 +8,6 @@ At the start: Have the complete game
 4. Vectors, velocity, homing missile movement, player normalized movement
 5. Collision detection - Killing the player, show game over, restart function
 6. Add target object, Arrays, loops (update/collision loop & renewing targets)
-7. Score, polish details (Keep player on screen, missile bounce off screen & off target)
+7. Score, add target on point increase, polish details (Keep player on screen, missile bounce off screen & off target)
 
 End of material inspiration: Several players

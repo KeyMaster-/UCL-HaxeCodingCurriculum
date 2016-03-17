@@ -5,7 +5,6 @@ import js.html.CanvasRenderingContext2D;
 import js.Browser;
 
 class Vis {
-    // :todo: Better solution for this?
     public var canvas_width(get, never):Float;
     public var canvas_height(get, never):Float;
     var canvas:CanvasElement;
@@ -21,8 +20,6 @@ class Vis {
 
             //Apply a base scale factor to everything
         ctx.scale(scale_factor, scale_factor);
-
-        //:todo: focus change
     }
 
     public function box(x:Float, y:Float, w:Float, h:Float, col:String = '#ffffff') {

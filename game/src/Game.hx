@@ -6,7 +6,7 @@ import entities.Missile;
 import entities.Target;
 
 class Game {
-    var targets:Array<Target>; //to be changed, lesson 6
+    var targets:Array<Target>; //lesson 6
     var player:Player; //lesson 1
     var missile:Missile; //lesson 3
 
@@ -51,8 +51,13 @@ class Game {
 
             if(missile.rect.overlaps(target.rect)) {
                 missile.bounce();
-                score++; //lesson 7
                 repositionTarget(target); //lesson 6
+                score++; //lesson 7
+                if(score % 3 == 0) { // lesson 7
+                    var new_target = new Target(0,0);
+                    repositionTarget(new_target);
+                    targets.push(new_target);
+                }
             }
 
             target.draw();
@@ -78,11 +83,12 @@ class Game {
 
         //lesson 6
     function repositionTarget(target:Target) {
-            //lesson note: This has the chance of spawning a target on top of the player, which would instantly kill them. 
-            //We won't fix it here, but it's an extension the learner could do.
-        target.rect.x = Math.random() * (Framework.vis.canvas_width - target.rect.w);
-        target.rect.y = Math.random() * (Framework.vis.canvas_height - target.rect.h);
-        
+            //Randomly placing the target has a chance to place it on the player, which would instantly kill them
+            //To prevent this, we roll a new position if the target happens to be on top of the player
+        do {
+            target.rect.x = Math.random() * (Framework.vis.canvas_width - target.rect.w);
+            target.rect.y = Math.random() * (Framework.vis.canvas_height - target.rect.h);
+        } while(target.rect.overlaps(player.rect));
     }
         //lesson 5
     function resetPlayer() {

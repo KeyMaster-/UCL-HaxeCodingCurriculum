@@ -7,7 +7,6 @@ class Entity {
         //The color of the rectangle drawn for this entity
     var color:String;
 
-    //:todo: maybe use a Vector object here?
     public function new(_x:Float, _y:Float, _w:Float, _h:Float) {
         rect = new Rect(_x, _y, _w, _h);
     }

@@ -22,6 +22,8 @@ class Framework {
     function onready(_) {
         if(Browser.document.readyState == 'complete') {
             run = Browser.window.requestAnimationFrame;
+            
+            if(run == null) throw "Error: requestAnimationFrame does not exist!";
 
             start_time = time;
 
@@ -29,7 +31,6 @@ class Framework {
             input = new Input();
             game = new Game();
 
-                //:todo: requestAnimationFrame may not exist. If so, display a proper message;
             run(update);
         }
     }

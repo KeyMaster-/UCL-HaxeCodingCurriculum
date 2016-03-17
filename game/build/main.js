@@ -62,8 +62,13 @@ Game.prototype = {
 			if(this.player.rect.overlaps(target.rect)) this.gameover = true;
 			if(this.missile.rect.overlaps(target.rect)) {
 				this.missile.bounce();
-				this.score++;
 				this.repositionTarget(target);
+				this.score++;
+				if(this.score % 5 == 0) {
+					var new_target = new entities_Target(0,0);
+					this.repositionTarget(new_target);
+					this.targets.push(new_target);
+				}
 			}
 			target.draw();
 		}
@@ -87,8 +92,10 @@ Game.prototype = {
 		this.targets.push(target);
 	}
 	,repositionTarget: function(target) {
-		target.rect.x = Math.random() * (Framework.vis.get_canvas_width() - target.rect.w);
-		target.rect.y = Math.random() * (Framework.vis.get_canvas_height() - target.rect.h);
+		do {
+			target.rect.x = Math.random() * (Framework.vis.get_canvas_width() - target.rect.w);
+			target.rect.y = Math.random() * (Framework.vis.get_canvas_height() - target.rect.h);
+		} while(target.rect.overlaps(this.player.rect));
 	}
 	,resetPlayer: function() {
 		this.player.rect.x = Framework.vis.get_canvas_width() / 2 - this.player.rect.w / 2;
