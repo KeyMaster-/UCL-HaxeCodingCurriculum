@@ -1,19 +1,17 @@
 package ;
-import entities.Player;
+import entities.Player; 
 import entities.Missile;
-import entities.Target;
+import entities.Target; //new
 
 class Game {
-    var targets:Array<Target>; //lesson 6
-    var player:Player; //lesson 1
-    var missile:Missile; //lesson 3
-
-    var score:Int = 0; //lesson 7
+    var targets:Array<Target>; //new //lesson 6
+    var player:Player;
+    var missile:Missile;
 
     var gameover:Bool = false; //lesson 5
 
     public function new() {
-        player = new Player(0, 0);
+        player = new Player(Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2);
         missile = new Missile(0, 0, player);
         reset();
     }
@@ -22,7 +20,7 @@ class Game {
 
     public function update(dt:Float) {
         Framework.vis.clear();
-            //lesson 5
+
         if(gameover) {
             Framework.vis.text("Game over! Press enter to restart.", Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2, '#ffffff', 20, 'middle', 'center');
             if(Framework.input.keydown(13)) { //On enter, Restart the game
@@ -31,6 +29,7 @@ class Game {
             }
             return;
         }
+
         player.update(dt);
         player.draw();
 
@@ -48,24 +47,16 @@ class Game {
 
             if(missile.rect.overlaps(target.rect)) {
                 repositionTarget(target); //lesson 6
-                missile.bounce();
-                score++; //lesson 7
-                if(score % 3 == 0) { // lesson 7
-                    var new_target = new Target(0,0);
-                    repositionTarget(new_target);
-                    targets.push(new_target);
-                }
             }
 
             target.draw();
         }
-
-        Framework.vis.text('Score: $score', Framework.vis.canvas_width / 2, 30, '#ffffff', 20, 'center', 'center'); //lesson 7
     }
+
         //lesson 5
     function reset() {
+            //new (everything in the function, old code moved to resetPlayer)
         resetPlayer();
-        score = 0; //lesson 7
 
         if(targets != null) {
             for(target in targets) {
@@ -79,6 +70,7 @@ class Game {
     }
 
         //lesson 6
+        //new
     function repositionTarget(target:Target) {
             //Randomly placing the target has a chance to place it on the player, which would instantly kill them
             //To prevent this, we roll a new position if the target happens to be on top of the player
@@ -89,6 +81,7 @@ class Game {
     }
 
         //lesson 6
+        //new (this was previoulsy in reset(), now moved over here for neatness)
     function resetPlayer() {
         player.rect.x = Framework.vis.canvas_width / 2 - player.rect.w / 2;
         player.rect.y = Framework.vis.canvas_height / 2 - player.rect.h / 2;

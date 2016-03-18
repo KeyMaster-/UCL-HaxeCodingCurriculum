@@ -1,19 +1,19 @@
 package ;
-import entities.Player;
+import entities.Player; 
 import entities.Missile;
 import entities.Target;
 
 class Game {
     var targets:Array<Target>; //lesson 6
-    var player:Player; //lesson 1
-    var missile:Missile; //lesson 3
+    var player:Player;
+    var missile:Missile;
 
-    var score:Int = 0; //lesson 7
+    var score:Int = 0; //new //lesson 7
 
     var gameover:Bool = false; //lesson 5
 
     public function new() {
-        player = new Player(0, 0);
+        player = new Player(Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2);
         missile = new Missile(0, 0, player);
         reset();
     }
@@ -22,7 +22,7 @@ class Game {
 
     public function update(dt:Float) {
         Framework.vis.clear();
-            //lesson 5
+
         if(gameover) {
             Framework.vis.text("Game over! Press enter to restart.", Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2, '#ffffff', 20, 'middle', 'center');
             if(Framework.input.keydown(13)) { //On enter, Restart the game
@@ -31,6 +31,7 @@ class Game {
             }
             return;
         }
+
         player.update(dt);
         player.draw();
 
@@ -48,6 +49,7 @@ class Game {
 
             if(missile.rect.overlaps(target.rect)) {
                 repositionTarget(target); //lesson 6
+                    //new
                 missile.bounce();
                 score++; //lesson 7
                 if(score % 3 == 0) { // lesson 7
@@ -59,9 +61,11 @@ class Game {
 
             target.draw();
         }
-
+        
+            //new
         Framework.vis.text('Score: $score', Framework.vis.canvas_width / 2, 30, '#ffffff', 20, 'center', 'center'); //lesson 7
     }
+
         //lesson 5
     function reset() {
         resetPlayer();

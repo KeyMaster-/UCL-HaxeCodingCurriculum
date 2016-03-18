@@ -16,6 +16,7 @@ Framework.prototype = {
 	onready: function(_) {
 		if(window.document.readyState == "complete") {
 			this.run = ($_=window,$bind($_,$_.requestAnimationFrame));
+			if(this.run == null) throw new js__$Boot_HaxeError("Error: requestAnimationFrame does not exist!");
 			Framework.start_time = Framework.get_time();
 			Framework.vis = new systems_Vis();
 			Framework.input = new systems_Input();
@@ -33,7 +34,7 @@ Framework.prototype = {
 var Game = function() {
 	this.gameover = false;
 	this.score = 0;
-	this.player = new entities_Player(0,0);
+	this.player = new entities_Player(Framework.vis.get_canvas_width() / 2,Framework.vis.get_canvas_height() / 2);
 	this.missile = new entities_Missile(0,0,this.player);
 	this.reset();
 };
@@ -49,22 +50,21 @@ Game.prototype = {
 			return;
 		}
 		this.player.update(dt);
-		this.missile.update(dt);
-		if(this.player.rect.overlaps(this.missile.rect)) this.gameover = true;
 		this.player.draw();
+		this.missile.update(dt);
 		this.missile.draw();
+		if(this.player.rect.overlaps(this.missile.rect)) this.gameover = true;
 		var _g = 0;
 		var _g1 = this.targets;
 		while(_g < _g1.length) {
 			var target = _g1[_g];
 			++_g;
-			target.update(dt);
 			if(this.player.rect.overlaps(target.rect)) this.gameover = true;
 			if(this.missile.rect.overlaps(target.rect)) {
-				this.missile.bounce();
 				this.repositionTarget(target);
+				this.missile.bounce();
 				this.score++;
-				if(this.score % 5 == 0) {
+				if(this.score % 3 == 0) {
 					var new_target = new entities_Target(0,0);
 					this.repositionTarget(new_target);
 					this.targets.push(new_target);
@@ -208,23 +208,21 @@ entities_Entity.prototype = {
 };
 var entities_Missile = function(_x,_y,_player) {
 	this.steering_impulse = 800;
-	this.speed = 300;
+	this.max_speed = 300;
 	entities_Entity.call(this,_x,_y,10,10);
+	this.color = "#ffffff";
 	this.player = _player;
 	this.velocity = new Vector(0,0);
 };
 entities_Missile.__super__ = entities_Entity;
 entities_Missile.prototype = $extend(entities_Entity.prototype,{
-	draw: function() {
-		Framework.vis.box(this.rect.x,this.rect.y,this.rect.w,this.rect.h,"#ffffff");
-	}
-	,update: function(dt) {
+	update: function(dt) {
 		var player_pos = new Vector(this.player.rect.x + this.player.rect.w / 2,this.player.rect.y + this.player.rect.h / 2);
 		var our_pos = new Vector(this.rect.x,this.rect.y);
 		var to_player = player_pos.subtract(our_pos);
 		to_player.set_length(this.steering_impulse * dt);
 		this.velocity.add(to_player);
-		if(this.velocity.get_length() > this.speed) this.velocity.set_length(this.speed);
+		if(this.velocity.get_length() > this.max_speed) this.velocity.set_length(this.max_speed);
 		this.rect.move(this.velocity.x * dt,this.velocity.y * dt);
 		if(this.rect.x < 0 || this.rect.x > Framework.vis.get_canvas_width() - this.rect.w || this.rect.y < 0 || this.rect.y > Framework.vis.get_canvas_height() - this.rect.h) {
 			this.rect.x = Util.clamp(this.rect.x,0,Framework.vis.get_canvas_width() - this.rect.w);
@@ -237,8 +235,6 @@ entities_Missile.prototype = $extend(entities_Entity.prototype,{
 	}
 });
 var entities_Player = function(_x,_y) {
-	this.shot_delay = 0.2;
-	this.last_shot_time = 0;
 	this.speed = 200;
 	entities_Entity.call(this,_x,_y,16,16);
 	this.color = "#75D974";
@@ -267,6 +263,15 @@ var haxe_ds_IntMap = function() {
 	this.h = { };
 };
 haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
+var js__$Boot_HaxeError = function(val) {
+	Error.call(this);
+	this.val = val;
+	this.message = String(val);
+	if(Error.captureStackTrace) Error.captureStackTrace(this,js__$Boot_HaxeError);
+};
+js__$Boot_HaxeError.__super__ = Error;
+js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
+});
 var systems_Input = function() {
 	this.pressed = new haxe_ds_IntMap();
 	window.document.onkeydown = $bind(this,this.onkeydown);

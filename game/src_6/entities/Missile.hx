@@ -23,16 +23,5 @@ class Missile extends Entity {
         velocity.add(to_player);
         if(velocity.length > max_speed) velocity.length = max_speed;
         rect.move(velocity.x * dt, velocity.y * dt);
-            //:todo:lesson 7
-            //If the bullet goes offscreen, move it back and make it bounce
-        if(rect.x < 0 || rect.x > (Framework.vis.canvas_width - rect.w) || rect.y < 0 || rect.y > (Framework.vis.canvas_height - rect.h)) {
-            rect.x = Util.clamp(rect.x, 0, Framework.vis.canvas_width - rect.w);
-            rect.y = Util.clamp(rect.y, 0, Framework.vis.canvas_height - rect.h);
-            bounce();
-        }
-    }
-        //lesson 7
-    public function bounce():Void {
-        velocity.multiply_scalar(-1);
     }
 }

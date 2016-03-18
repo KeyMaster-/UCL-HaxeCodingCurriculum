@@ -1,14 +1,11 @@
 package entities;
 
 class Player extends Entity {
-    var speed:Float = 200;
-
-    var last_shot_time:Float = 0;
-    var shot_delay:Float = 0.2;
+    var speed:Int = 200;
 
     public function new(_x:Float, _y:Float) {
         super(_x, _y, 16, 16);
-        color = '#75D974';
+        color = '#75D974'; //Sets the color of the player. See this wikipedia section for more details: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
     }
 
     //:todo:lesson: Conditionals; Variables; Normalising vectors
@@ -30,9 +27,5 @@ class Player extends Entity {
 
         move.length = speed * dt; //Make sure we always move at the same speed, even when moving diagonally
         rect.move(move.x, move.y);
-        
-            //:todo:lesson 7
-        rect.x = Util.clamp(rect.x, 0, Framework.vis.canvas_width - rect.w);
-        rect.y = Util.clamp(rect.y, 0, Framework.vis.canvas_height - rect.h);
     }
 }

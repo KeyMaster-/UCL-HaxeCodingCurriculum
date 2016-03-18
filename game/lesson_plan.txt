@@ -4,7 +4,7 @@ At the start: Have the complete game
 0. Installation etc (build instructions) //todo
 1. Variables, if statements, player movmeent (fixed speed) (add update & render to game update) //todo
 2. Functions, update loop & delta time
-3. Objects/Classes - Instatiation, inheritance, example: Missile class, draw code
+3. Objects/Classes - Instatiation, inheritance, importing classes. example: Missile class, draw code
 4. Vectors, velocity, homing missile movement, player normalized movement
 5. Collision detection - Killing the player, show game over, restart function
 6. Add target object, Arrays, loops (update/collision loop & renewing targets)
