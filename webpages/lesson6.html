@@ -120,13 +120,62 @@ do{
 
 				This method iterates through a range of numbers between 0 and the length of our array, then prints the item at that index.<br><br>
 
-
-
-
-
-
+				<h2> Exercise 6 </h2><br><br>
 
 				<h3>Adding Target Objects</h3><br>
+
+				For this exercise, we will need to work with a new object - the <code> Target</code> object.<br><br>
+
+				Firstly, create a new class file in the <code>entities</code> folder and name it <code>Target.hx</code>. <br><br>
+
+				Have the Target extend the Entity class and write a constructor method for this class.
+				<i> (Refer to Lesson 3 if you forgot how to do this.)</i><br><br>
+
+				This object will now represent the target in our game that we have to try and hit to score points. <br><br><br>
+
+				<h3>Updating our Update</h3><br>
+
+				Next, we need to make some additions to our <code>Game.hx</code> file.<br><br><br>
+
+				<li>Create an array that stores values of the Target data-type.</li><br>
+				<li>In the update function, iterate over all target objects in this array</li><br>
+				<li> Check if our player overlaps with any of these targets. If so, set <code>gameover</code> to <code>true</code>.</li><br>
+				<li>Check if the missile overlaps with any of these targets. If so execute this line <code> repositionTarget(target); </code>. We will add this function later.</li><br>
+				<li>Finally draw each target.</li><br>
+
+				<h3>Reposition Those Targets</h3><br>
+
+				Now we need to add our <code> repositionTarget(target) </code> function.<br>
+				This small function serves to easily reposition the target to a random location on the screen.<br><br>
+
+				Using our knowledge of functions from Lesson 2, create a function <code>repositionTarget()</code> that takes a single parameter of type <code>Target</code>.<br><br>
+
+				Then change the <code>x</code> and <code>y</code> values of this object to random values within the bounds of our screen.<br><br>
+
+				<i>Hint: Use Math.random() to generate a random number</i><br><br>
+
+				Also take into consideration the possibility of randomly repositioning our target to the same position our player object is in, this will automatically kill the player!<br><br>
+
+				<h3>Clean Up</h3><br>
+
+				At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. <br><br>
+
+				Now we need a way to reset the targets when the player wants to play again.<br><br>
+
+				In our <code>reset()</code> function in <code>Game.hx</code> move all the player related reset code to a new function and call it <code>resetPlayer()</code>.<br><br>
+
+				Then put a call to this function at the beginning of our <code>reset()</code> function.<br><br>
+
+				Now we need to write the code to reset our targets after resetting the player.<br><br>
+
+				The code should achieve the following:<br><br><i>
+				<li>Destroy all current targets if there are some still active</li><br>
+				<li>Reset the targets Array to an empty array</li><br>
+				<li>Create a new target object</li><br>
+				<li>Reposition that object</li><br>
+				<li>Add that object to our array of targets</li><br><br><br></i>
+
+				Congratulations you have now added targets to our game!
 
 		</div>
 		<div id="sidebar">

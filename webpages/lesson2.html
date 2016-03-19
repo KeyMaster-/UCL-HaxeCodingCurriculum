@@ -93,46 +93,28 @@ var fullName:String = sayHelloAndReturnFullName(someFirstName, someLastName);</c
 
 			The purpose of this loop is to constantly check for certain events such as player movement, enemy movement, collisions between objects in the game as well as redrawing all the objects on the screen. <br><br>
 
-			The update loop in our game is contained in the <code>Game.hx</code> file on line 26. <br>
+			The update loop in our game is contained in the <code>Game.hx</code> file on line 13. <br>
 
-			Line 27 deals with clearing the screen, in preparation to redraw all the elements as they have probably changed since the last loop.<br>
+			Line 14 deals with clearing the screen, in preparation to redraw all the elements as they have probably changed since the last loop.<br>
 			<pre class="prettyprint"><code class="language-haxe">Framework.vis.clear();</code></pre><br>
 
-			The next if statement block on lines 29-36 deals with checking if the <code>gameover</code> condition is met, and if so, end the game. <br>
+			We then update the player position using the <code>update()</code> function defined in <code>Player.hx</code>. This takes a parameter, <code> dt</code>, this represents the Delta Time, something we will come onto shortly.<br><br>
 
-<pre class="prettyprint"><code class="language-haxe">if(gameover) {
-	Framework.vis.text("Game over! Press enter to restart.", Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2, '#ffffff', 20, 'middle', 'center');
-	if(Framework.input.keydown(13)) { //On enter, Restart the game
-		reset();
-		gameover = false;
-	}
-	return;
-}</code></pre><br>
+			After we have updated the player, we then draw it to the screen again, as remember we have cleared the screen at this point. This is done using the <code>draw()</code> fucntion defined in <code>Entity.hx</code>.
 
-			The next if block deals with spawning enemies if a certain amount of time has elapsed. This makes use of a concept known as "Delta Time" which we will come onto shortly. <br>
-<pre class="prettyprint"><code class="language-haxe">enemy_timer -= dt;
-if(enemy_timer <= 0) {
-	var enemy = new Enemy(Framework.vis.canvas_width, 0, player);
-	enemy.rect.y = Math.random() * (Framework.vis.canvas_height - enemy.rect.h);
-	entities.push(enemy);
-	enemy_timer = enemy_spawn_interval;
-}</code></pre><br>
-
-			Finally there is a larger while loop that deals with going through "entities" in the game and updating their positions then redrawing them to the screen. It also checks for collisions between entities and deals with that appropriately. <br><br>
-
-			<br>
+			<br><br>
 
 			<h3>Delta Time</h3><br>
 
 			Delta Time simply means the change in time. In the context of our game, it means the time that has elapsed since our game last updated, or called its update loop. <br><br>
 
-			You probably noticed that our update function had a single parameter <code>dt</code>.<br>
-			This keeps track of delta time in our program.<br><br>
+			As mentioned earlier the <code>update()</code> function for the player entity took a parameter called <code> dt</code>.This keeps track of delta time in our program.<br><br><br><br>
 
-			Furthermore, several lines in update function make use of this: <br><br>
+			<h2>Exercise 2</h2><br>
 
-			<li><code>enemy_timer -= dt;</code> on line 38</li><br>
-			<li><code>entity.update(dt);</code> on line 51</li>
+			In this exercise we will simply be updating the <code>update()</code> function in <code>Player.hx</code> to take into account the <code>dt</code> parameter.<br><br>
+
+			What you need to do is for each <code>Framework.input.keydown()</code> if block, multiply the change in speed by dt.<br>
 
 
 		</div>
