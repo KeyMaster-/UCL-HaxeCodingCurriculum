@@ -37,23 +37,23 @@
 				<span class="byline">CLASSES, OBJECT - INSTANTIATION AND INHERITANCE & INTRODUCING MISSLES</span> 
 			</div>
 								<p>Every day, we interact with countless number of objects. Each one of these objects have their own attributes, which we can use to describe them, and functions, for us to do stuff with it.</p>
-				<p>Let’s talk about giraffe. Let’s say there is an African giraffe named Jerry, and it is a type of giraffe. What are some attributes of Jerry? It has a mouth, two eyes and ears and 4 legs. It’s yellow in colour and has brown spots. And it also has a name Jerry. What are some of the things it could do? It could walk. It could bow its head for a drink in the lake. It could pee. </p>   
-				<p>Likewise, in programming, we can create objects that have attributes and functions. These objects need to be instantiated from a Class. A Class holds generic information of the attributes and function of an object. In our example, African giraffe is a class, and Jerry is the object.</p>
-				<p>Now, let’s bring Jerry into the programming world. Since Jerry belongs to the Class of African Giraffes, we define a class African Giraffe which has attributes such as name, colour, number of legs place of birth and neck length. When we do this, we are saying all African Giraffes initiated will have these attributes.</p>
-				<pre class="prettyprint"><code class="language-haxe"> class African Giraffe{	
+				<p>Let’s talk about giraffes. Let’s say there is an African giraffe named Jerry, and it is a type of giraffe. What are some attributes of Jerry? It has a long neck, 4 legs and a position x and y. It’s yellow in colour. And it also has a name, Jerry. What are some of the things it could do? It could walk. It could bow its head for a drink in the lake. It could pee. </p>   
+				<p>Likewise, in programming, we can create objects that have attributes and functions. These objects need to be instantiated from a Class. A Class holds generic information of the attributes and functions of an object. In our example, AfricanGiraffe is a class, and Jerry is the object.</p>
+				<p>Now, let’s bring Jerry into the programming world. Since Jerry belongs to the Class of African Giraffes, we define a class AfricanGiraffe which has attributes such as name, colour, number of legs, place of birth and neck length. When we do this, we are saying all African Giraffes initiated will have these attributes.</p>
+				<pre class="prettyprint"><code class="language-haxe"> class AfricanGiraffe{	
     var name:String; 
     var colour:String; 
-    var legs:Int = 4; 
+    var legs:int = 4; 
     var neck_length:String = “long”;
-    var hungry:Boolean = true; var x:Int, var y:Int;
+    var hungry:Boolean = true; var x:int, var y:int;
     var happy:Boolean;
     var placeOfBirth:String = “Africa”;
 				</code></pre>
 				<p>Next, we give our African Giraffes the ability to walk. </p>
 				
-				<pre class="prettyprint"><code class="language-haxe">   public function take_one_step(){
-    x = x + 1;
-    y = y + 1;
+				<pre class="prettyprint"><code class="language-haxe">   public function take_one_step(forward:int, right:int){
+    x = x + forward;
+    y = y + right;
   }</code></pre>
 
 				<p>Up to now, all we’ve been doing is defining what an African Giraffe is and what it does. To actually create (or instantiate) an African Giraffe, we need to create a constructor. A constructor is a method that tells the computer that a new object of a class is going to be instantiated and that this object should have certain information referenced to its attributes.
@@ -103,11 +103,12 @@
  }</code></pre>
 
 
-				<p>Now we have our full African Giraffe attributes, methods and constructor, we initialize our African Giraffe Jerry like so:</p>
+				<p>Now that we have our full African Giraffe attributes, methods and constructor, we initialize our African Giraffe Jerry like so:</p>
 
  				<pre class="prettyprint"><code class="language-haxe">var jerry:AfricanGiraffe = new(“Jerry”, “yellow”, true);</code></pre>
 
-				<p>But why Inheritance? We do this to avoid repetition and because it follows a logical thinking process. If an African Giraffe can do everything a Giraffe can do, then an African Giraffe is a type of Giraffe, and we don’t want to be rewriting the same code. </p>
+ 				<p>Why classes and objects? We also do this because it is easy for us to think in terms of objects. Each object has its own function and stores its own information. This way, information is more isolated from the rest of the program, making it easier to make changes in the future without affect the rest of the program.</p>
+				<p>But why Inheritance? We do this to avoid repetition. If an African Giraffe can do everything a Giraffe can do, then an African Giraffe is a type of Giraffe, and we don’t want to be rewriting the same code. So if we want to update all giraffe objects in our program, we can do so by simply updating the Giraffe super class instead of each individual type of giraffe.</p>
 
 				<p><b><hr>Exercise 2</hr></b></p>
 
