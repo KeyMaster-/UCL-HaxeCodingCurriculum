@@ -34,9 +34,106 @@
 		<div id="content">
 			<div class="title">
 				<h2>Lesson 2</h2>
-				<span class="byline">???</span> 
+				<span class="byline">Functions, Update loop & Delta Time</span> 
 			</div>
-				Soon...
+
+
+			<h3>Functions</h3><br>
+
+			Functions are one way to reduce code repetition. Essentially they are blocks of code that are given a name, which can later be run by referencing that name.<br><br>
+			Here's a simple example:<br>
+			<pre class="prettyprint"><code class="language-haxe">function sayHello() {
+	trace("Hello");
+}</code></pre>
+
+			This simple function allows us to now print the word "Hello" to terminal by simply calling the function <code>sayHello()</code> anywhere in our program.<br>
+
+			However this is not very useful to us as we could just be writing  <code>trace("Hello");</code> anywhere in our program instead.<br>
+
+			But now imagine if the function was like this: <br>
+						<pre class="prettyprint"><code class="language-haxe">function sayHello() {
+	trace("H \n");
+	trace("e \n");
+	trace("l \n");
+	trace("l \n");
+	trace("o \n");
+}</code></pre> 
+
+			This now means our <code>sayHello()</code> function is more useful as it lets us execute 5 lines of trace() calls using just a single command -  <code>sayHello()</code><br><br>
+
+			<h3>Parameters and Return Values</h3><br>
+
+			Functions are even more useful than this as they can take input as well as return an output.<br>
+
+			For example:<br>
+
+			<pre class="prettyprint"><code class="language-haxe">function sayHelloAndReturnFullName(firstName:String, lastName:String ) : String {
+	trace("Hello" + firstName);
+
+	return firstName + " " + lastName;
+}</code></pre>
+
+			This function specifies that it requires two "parameters", <code>firstName</code> and <code>lastname</code><br>
+			This is specified between the parentheses in the first line. Here a name is given to the variable followed by a colon and the type of the variable. <br>
+			Now when we call the function later in the program we will have to pass it two String "arguments".<br>
+			For example: <br>
+						<pre class="prettyprint"><code class="language-haxe">var someFirstName:String = “John”;
+
+var someLastName:String = "Doe";
+
+var fullName:String = sayHelloAndReturnFullName(someFirstName, someLastName);</code></pre>
+
+			The function will then print <code> Hello John </code> to the screen and will return a <code>String</code> containing the full name <code>"John Doe"</code>.<br>
+			This full name is then stored in the variable <code>fullName</code>.<br><br>
+
+			<h3>Update Loop</h3><br>
+
+			Most simple games make use of what is known as an update loop or a main game loop. <br><br>
+			This is essentially a function that is repeatedly called while the game is running. <br><br>
+
+			The purpose of this loop is to constantly check for certain events such as player movement, enemy movement, collisions between objects in the game as well as redrawing all the objects on the screen. <br><br>
+
+			The update loop in our game is contained in the <code>Game.hx</code> file on line 26. <br>
+
+			Line 27 deals with clearing the screen, in preparation to redraw all the elements as they have probably changed since the last loop.<br>
+			<pre class="prettyprint"><code class="language-haxe">Framework.vis.clear();</code></pre><br>
+
+			The next if statement block on lines 29-36 deals with checking if the <code>gameover</code> condition is met, and if so, end the game. <br>
+
+<pre class="prettyprint"><code class="language-haxe">if(gameover) {
+	Framework.vis.text("Game over! Press enter to restart.", Framework.vis.canvas_width / 2, Framework.vis.canvas_height / 2, '#ffffff', 20, 'middle', 'center');
+	if(Framework.input.keydown(13)) { //On enter, Restart the game
+		reset();
+		gameover = false;
+	}
+	return;
+}</code></pre><br>
+
+			The next if block deals with spawning enemies if a certain amount of time has elapsed. This makes use of a concept known as "Delta Time" which we will come onto shortly. <br>
+<pre class="prettyprint"><code class="language-haxe">enemy_timer -= dt;
+if(enemy_timer <= 0) {
+	var enemy = new Enemy(Framework.vis.canvas_width, 0, player);
+	enemy.rect.y = Math.random() * (Framework.vis.canvas_height - enemy.rect.h);
+	entities.push(enemy);
+	enemy_timer = enemy_spawn_interval;
+}</code></pre><br>
+
+			Finally there is a larger while loop that deals with going through "entities" in the game and updating their positions then redrawing them to the screen. It also checks for collisions between entities and deals with that appropriately. <br><br>
+
+			<br>
+
+			<h3>Delta Time</h3><br>
+
+			Delta Time simply means the change in time. In the context of our game, it means the time that has elapsed since our game last updated, or called its update loop. <br><br>
+
+			You probably noticed that our update function had a single parameter <code>dt</code>.<br>
+			This keeps track of delta time in our program.<br><br>
+
+			Furthermore, several lines in update function make use of this: <br><br>
+
+			<li><code>enemy_timer -= dt;</code> on line 38</li><br>
+			<li><code>entity.update(dt);</code> on line 51</li>
+
 
 		</div>
 		<div id="sidebar">
@@ -51,6 +148,8 @@
 					<li><a href="lesson3.html">Lesson 3</a></li>
 					<li><a href="lesson4.html">Lesson 4</a></li>
 					<li><a href="lesson5.html">Lesson 5</a></li>
+					<li><a href="lesson6.html">Lesson 6</a></li>
+					<li><a href="lesson7.html">Lesson 7</a></li>
 				</ul>
 			</div>
 		</div>
