@@ -34,10 +34,25 @@
 		<div id="content">
 			<div class="title">
 				<h2>Lesson 5</h2>
-				<span class="byline">???</span> 
+				<span class="byline">COLLISION DETECTION - DEATHS, GAME OVER, RESTART</span> 
 			</div>
-				Soon...
+			<p>For the game to be playable, we need to make it such that the player dies when the missile collides with the player’s rectangle.  We also want the game to be restart so we can play again.</p>
+			<p><b>Collision</b></p>
+			<p>Put yourself in the shoes of the screen. When will you consider 2 objects have collided? It is when the 2 objects overlap. In other words, if 2 objects share the same pixel on the screen, they are colliding.</p>
+			<p><b>Reset</b></p>
+			<p>When a game is set to reset, the player’s rectangle should be in the middle of the screen, and the missile should start at the top and be one third of the width.</p>
+			<p><b>Game Over</b></p>
+			<p>We want to continually check whether the game has ended. And if the game has ended, we want to display a message that says “ GAME OVER” then asks the user to hit enter to play again. </p>
+			<p><b>Exercise 5</b></p>
+			<p>Firstly, open up the file <code>Game.hx</code>.<p>
+			<p>To end the game, we need to have a type of variable that can hold only 2 values. Can you think of any? Add this attribute to the Game class. Set it so that the game is NOT over.</p>
+			<p>Next, create a reset function that resets the game. It should not take in or return any parameters! </p>
+			<p>Next, we will be working in <code>public function update(dt:Float)</code>. Firstly at the bottom of the function (after <code>missile.draw()</code> but before curly closing braces), add an if statement to check if the player and missile had collided. If so, set the earlier “game over” attribute so that it indicates the game is over.</p> 
+			<p>Next, after <code>Framework.vis.clear();</code>, add another if statement that checks whether the game is over, and if so, displays a game over message and asks the player to hit enter to restart. Lastly, add an if statement in this if statement, that calls <code>reset()</code> if enter was pressed. </p>
+			<p>Hint: use <code>Framework.vis.text</code> to display an alert box. Google what the parameters are! <br>
+			Double Hint:   The key code for ENTER is 13!</p> 
 
+				
 		</div>
 		<div id="sidebar">
 			<div class="box2">
