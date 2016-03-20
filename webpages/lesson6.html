@@ -14,188 +14,191 @@
 </head>
 <body onload="prettyPrint()">
 <div id="wrapper">
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h1><a href="#">Coding Curriculum</a></h1>
-			</div>
-		</div>
-	</div>
-	<div id="menu-wrapper">
-		<div id="menu" class="container">
-			<ul>
-				<li><a href="index.html">Homepage</a></li>
-				<li class="current_page_item"><a href="#">Lessons</a></li>
-			</ul>
-		</div>
-		<!-- end #menu --> 
-	</div>
-	<div id="page" class="container">
-		<div id="content">
-			<div class="title">
-				<h2>Lesson 6</h2>
-				<span class="byline">Arrays, Loops and Adding Target Objects </span> 
-			</div>
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <div id="logo">
+                <h1><a href="#">Coding Curriculum</a></h1>
+            </div>
+        </div>
+    </div>
+    <div id="menu-wrapper">
+        <div id="menu" class="container">
+            <ul>
+                <li><a href="index.html">Homepage</a></li>
+                <li class="current_page_item"><a href="#">Lessons</a></li>
+            </ul>
+        </div>
+        <!-- end #menu --> 
+    </div>
+    <div id="page" class="container">
+        <div id="content">
+            <div class="title">
+                <h2>Lesson 6</h2>
+                <span class="byline">Arrays, Loops and Adding Target Objects </span> 
+            </div>
 
-			At this point we have learned a lot of different concepts related to programming. This lesson will draw on concepts we have learend from lesson 1 related to variables and data types as well as Lesson 2. <br><br>
+            At this point we have learned a lot of different concepts related to programming. This lesson will draw on concepts we have learend from lesson 1 related to variables and data types as well as Lesson 2. <br><br>
 
-				<h3>Arrays</h3><br>
+                <h3>Arrays</h3>
 
-				Arrays are a convenient way to store multiple values in a single variable. <br><br>
-				They are defined like this:<br>
-				<pre class="prettyprint"><code class="language-haxe">var myArray = new Array&ltString>();</code></pre><br><br>
+                Arrays are a convenient way to store multiple values in a single variable. <br><br>
+                They are created like this:<br>
+                <pre class="prettyprint"><code class="language-haxe">var myArray = new Array&ltString>();</code></pre><br><br>
 
-				This declares <code>myArray</code> as a new array that can store values of the <code>String</code> data type.<br><br>
+                This declares <code>myArray</code> as a new array that can store values of the <code>String</code> data type.<br><br>
 
-				At this point our array contains no values, we can confirm that by using the <code>.length</code> method on the array:<br>
+                At this point our array contains no values, we can confirm that by using the <code>.length</code> method on the array:<br>
 
-				<pre class="prettyprint"><code class="language-haxe">trace(myArray.length);</code></pre><br>
+                <pre class="prettyprint"><code class="language-haxe">trace(myArray.length);</code></pre><br>
 
-				This should print <code>0</code> to the screen.<br><br>
+                This should print <code>0</code> to the console.<br><br>
 
-				We can add values to our array using the array indexes:<br>
+                We can add values to the end of our array using the array method <code>push</code>:<br>
 
-				<pre class="prettyprint"><code class="language-haxe">myArray[0] = "hello";
-myArray[9] = "goodbye";</code></pre><br>
+                <pre class="prettyprint"><code class="language-haxe">myArray.push('hello');
+myArray.push('goodbye');</code></pre>
+                
+                And we can access array elements using square brackets and indices after the variable name:<br>
+                <pre class="prettyprint"><code class="language-haxe">trace(myArray[0]); //prints "hello"
+trace(myArray[1]); //prints "goodbye"</code></pre>
 
-				At this point if we visualise the array as a column in an excel spreadsheet, the indexes refer to the row numbers for that column (starting from 0 not 1). <br><br>
+                At this point if we visualise the array as a column in an excel spreadsheet, the indexes refer to the row numbers for that column (starting from 0, not 1!) <br><br>
 
-				Notice we are able to add values to the 9th index position even though nothing was added in between <code>hello</code> and <code>goodbye</code>.<br><br>
+                Arrays in Haxe are also dynamic, which means they dont have a fixed sized and can hold as many values as can fit in memory. <br><br>
 
-				Arrays in Haxe are also dynamic, which means they dont have a fixed sized and can hold as many values as can fit in memory. <br><br>
+                A full list of Haxe Array methods can be found <a href="http://api.haxe.org/Array.html">here</a>, play around with them to figure out what they do and how you can use them. <br><br>
 
-				A full list of Haxe Array methods can be found <a href="http://api.haxe.org/Array.html">here</a>, play around with them to figure out what they do and how you can use them. <br><br><br>
+                <h3>Loops</h3>
 
-				<h3>Loops</h3><br><br>
+                Loops provide a way for us to repeat lines of code without typing them out again and again.<br><br>
 
-				Loops provide a way for us to repeat lines of code without typing them out again and again.<br><br>
+                There are two main ways to loop in Haxe: <code>while</code> loops and <code>for</code> loop.  <br>
 
-				There are two main ways to loop in Haxe: <code>While Loops</code> and <code>For Loops</code>.  <br><br>
+                <h4>While Loops</h4>
+                While loops work by executing code as long as a condition is true.<br><br>
 
-				<h4>While Loops</h4><br>
-				While loops work by executing code as long as a condition is true.<br><br>
+                For example, in english we could say, while we have not yet reached the end of the array, print the next item in the array.<br><br>
 
-				For example, in english we could say, while we have not yet reached the end of the array, print the next item in the array.<br><br>
+                In code this would look something like this:<br>
 
-				In code this would look something like this:<br>
-
-				<pre class="prettyprint"><code class="language-haxe">var n = 0;
+                <pre class="prettyprint"><code class="language-haxe">var n = 0;
 while(n < myArray.length){
-	trace(myArray[n]);
+    trace(myArray[n]);
+    n = n + 1; //move to the next element in the array
 }</code></pre><br>
 
-				Here our condition is within the round brackets: <code> (n < myArray.length) </code> we initially declare this variable <code>n</code> and set it to 0. <br><br>
-				Our code then checks the condition in the while loop and if it is true then it will execute the code in the following curly brackets: <code> trace(myArray[n]); </code>.
-				<br><br>
-				Once this code has finished executing, the program will again check the condition in the while loop, therefore looping until the condition is false. <br><br>
+                Here our condition is within the round brackets: <code> (n < myArray.length) </code> we initially declare this variable <code>n</code> and set it to 0. <br><br>
+                Our code then checks the condition in the while loop and if it is true then it will execute the code in the following curly brackets: <code> trace(myArray[n]); </code>.
+                <br><br>
+                Once this code has finished executing, the program will again check the condition in the while loop, therefore looping until the condition is false. <br><br>
 
-				<i>Note: This means that there is a chance that the code inside the curly brackets may never actually execute as the condition may be always false. </i><br><br>
+                <i>Note: This means that there is a chance that the code inside the curly brackets may never actually execute as the condition may be always false. </i><br>
 
-				<h4>Do-While Loops</h4><br>
+                <h4>Do-While Loops</h4>
 
-				This is where Do-While loops come in. These work essentially the same way as while loops, except the condition is placed after the code that is to be looped, therefore meaning the code will always execute at least once.
-				<pre class="prettyprint"><code class="language-haxe">var n = 0;
-do{
-	trace(myArray[n]);
-} while(n < myArray.length);</code></pre><br>
+                This is where Do-While loops come in. These work essentially the same way as while loops, except the condition is placed after the code that is to be looped, therefore meaning the code will always execute at least once.
+                <pre class="prettyprint"><code class="language-haxe">var n = 0;
+do {
+    trace(myArray[n]);
+} while(n < myArray.length);</code></pre>
 
-				<h4>For Loops</h4><br>
+                <h4>For Loops</h4>
 
-				For loops work differently to while and do-while loops however.<br><br>
+                For loops work differently to while and do-while loops however.<br><br>
 
-				These loops, instead of looping based on a condition, loop for a set number of times. <br><br>
+                These loops, instead of looping based on a condition, loop for a set number of times. <br><br>
 
-				For example, if we were to print each item in our array using a for loop instead of a while loop it would look something like this:
+                For example, if we were to print each item in our array using a for loop instead of a while loop it would look something like this:
 
-				<pre class="prettyprint"><code class="language-haxe">for(value in myArray){
-	trace(value);
+                <pre class="prettyprint"><code class="language-haxe">for(value in myArray){
+    trace(value);
 }</code></pre><br>
 
-				This code iterates through elements in the array and prints each one, therefore only looping a number of times equal to the length of the array.<br><br>
+                This code iterates through elements in the array and prints each one, therefore only looping a number of times equal to the length of the array.<br><br>
 
-				Another way we could use the for loop is like this:
-				<pre class="prettyprint"><code class="language-haxe">for(index in 0...myArray.length){
-	trace(myArray[index]);
+                Another way we could use the for loop is like this:
+                <pre class="prettyprint"><code class="language-haxe">for(index in 0...myArray.length){
+    trace(myArray[index]);
 }</code></pre><br>
 
-				This method iterates through a range of numbers between 0 and the length of our array, then prints the item at that index.<br><br>
+                This method iterates through a range of numbers between 0 and the length of our array, though not including the value <code>myArray.length</code> itself, then prints the item at that index.<br><br>
 
-				<h2> Exercise 6 </h2><br><br>
+                <h2>Exercise 6</h2><br>
 
-				<h3>Adding Target Objects</h3><br>
+                <h3>Adding Target Objects</h3>
 
-				For this exercise, we will need to work with a new object - the <code> Target</code> object.<br><br>
+                For this exercise, we will need to work with a new object - the <code> Target</code> object.<br><br>
 
-				Firstly, create a new class file in the <code>entities</code> folder and name it <code>Target.hx</code>. <br><br>
+                Firstly, create a new class file in the <code>entities</code> folder and name it <code>Target.hx</code>. <br><br>
 
-				Have the Target extend the Entity class and write a constructor method for this class.
-				<i> (Refer to Lesson 3 if you forgot how to do this.)</i><br><br>
+                Have the Target extend the Entity class and write a constructor method for this class.
+                <i> (Refer to Lesson 3 if you forgot how to do this.)</i><br><br>
 
-				This object will now represent the target in our game that we have to try and hit to score points. <br><br><br>
+                This object will now represent the target in our game that we have to try and hit to score points. <br><br><br>
 
-				<h3>Updating our Update</h3><br>
+                <h3>Updating our Update</h3>
 
-				Next, we need to make some additions to our <code>Game.hx</code> file.<br><br><br>
+                Next, we need to make some additions to our <code>Game.hx</code> file.<br><br>
 
-				<li>Create an array that stores values of the Target data-type.</li><br>
-				<li>In the update function, iterate over all target objects in this array</li><br>
-				<li> Check if our player overlaps with any of these targets. If so, set <code>gameover</code> to <code>true</code>.</li><br>
-				<li>Check if the missile overlaps with any of these targets. If so execute this line <code> repositionTarget(target); </code>. We will add this function later.</li><br>
-				<li>Finally draw each target.</li><br>
+                <li>Create an array that stores values of the Target data-type.</li><br>
+                <li>In the update function, iterate over all target objects in this array</li><br>
+                <li> Check if our player overlaps with any of these targets. If so, set <code>gameover</code> to <code>true</code>.</li><br>
+                <li>Check if the missile overlaps with any of these targets. If so execute this line <code> repositionTarget(target); </code>. We will add this function later.</li><br>
+                <li>Finally draw each target.</li><br>
 
-				<h3>Reposition Those Targets</h3><br>
+                <h3>Reposition Those Targets</h3>
 
-				Now we need to add our <code> repositionTarget(target) </code> function.<br>
-				This small function serves to easily reposition the target to a random location on the screen.<br><br>
+                Now we need to add our <code> repositionTarget(target) </code> function.<br>
+                This small function serves to easily reposition the target to a random location on the screen.<br><br>
 
-				Using our knowledge of functions from Lesson 2, create a function <code>repositionTarget()</code> that takes a single parameter of type <code>Target</code>.<br><br>
+                Using our knowledge of functions from Lesson 2, create a function <code>repositionTarget()</code> that takes a single parameter of type <code>Target</code>.<br><br>
 
-				Then change the <code>x</code> and <code>y</code> values of this object to random values within the bounds of our screen.<br><br>
+                Then change the <code>x</code> and <code>y</code> values of this object to random values within the bounds of our screen.<br><br>
 
-				<i>Hint: Use Math.random() to generate a random number</i><br><br>
+                <i>Hint: Use Math.random() to generate a random number between 0 and 1</i><br><br>
 
-				Also take into consideration the possibility of randomly repositioning our target to the same position our player object is in, this will automatically kill the player!<br><br>
+                Also take into consideration the possibility of randomly repositioning our target to the same position our player object is in, this will automatically kill the player!<br><br>
 
-				<h3>Clean Up</h3><br>
+                <h3>Clean Up</h3>
 
-				At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. <br><br>
+                At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. <br><br>
 
-				Now we need a way to reset the targets when the player wants to play again.<br><br>
+                Now we need a way to reset the targets when the player wants to play again.<br><br>
 
-				In our <code>reset()</code> function in <code>Game.hx</code> move all the player related reset code to a new function and call it <code>resetPlayer()</code>.<br><br>
+                In our <code>reset()</code> function in <code>Game.hx</code> move all the player related reset code to a new function and call it <code>resetPlayer()</code>.<br><br>
 
-				Then put a call to this function at the beginning of our <code>reset()</code> function.<br><br>
+                Then put a call to this function at the beginning of our <code>reset()</code> function.<br><br>
 
-				Now we need to write the code to reset our targets after resetting the player.<br><br>
+                Now we need to write the code to reset our targets after resetting the player.<br><br>
 
-				The code should achieve the following:<br><br><i>
-				<li>Destroy all current targets if there are some still active</li><br>
-				<li>Reset the targets Array to an empty array</li><br>
-				<li>Create a new target object</li><br>
-				<li>Reposition that object</li><br>
-				<li>Add that object to our array of targets</li><br><br><br></i>
+                The code should achieve the following:<br><br><i>
+                <li>Destroy all current targets if there are some still active</li><br>
+                <li>Reset the targets Array to an empty array</li><br>
+                <li>Create a new target object</li><br>
+                <li>Reposition that object</li><br>
+                <li>Add that object to our array of targets</li><br><br><br></i>
 
-				Congratulations you have now added targets to our game!
+                Congratulations you have now added targets to our game!
 
-		</div>
-		<div id="sidebar">
-			<div class="box2">
-				<div class="title">
-					<h2>Lesson navigation</h2>
-				</div>
-				<ul class="style2">
-					<li><a href="lesson0.html">Lesson 0</a></li>
-					<li><a href="lesson1.html">Lesson 1</a></li>
-					<li><a href="lesson2.html">Lesson 2</a></li>
-					<li><a href="lesson3.html">Lesson 3</a></li>
-					<li><a href="lesson4.html">Lesson 4</a></li>
-					<li><a href="lesson5.html">Lesson 5</a></li>
-					<li><a href="lesson6.html">Lesson 6</a></li>
-					<li><a href="lesson7.html">Lesson 7</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+        </div>
+        <div id="sidebar">
+            <div class="box2">
+                <div class="title">
+                    <h2>Lesson navigation</h2>
+                </div>
+                <ul class="style2">
+                    <li><a href="lesson0.html">Lesson 0</a></li>
+                    <li><a href="lesson1.html">Lesson 1</a></li>
+                    <li><a href="lesson2.html">Lesson 2</a></li>
+                    <li><a href="lesson3.html">Lesson 3</a></li>
+                    <li><a href="lesson4.html">Lesson 4</a></li>
+                    <li><a href="lesson5.html">Lesson 5</a></li>
+                    <li><a href="lesson6.html">Lesson 6</a></li>
+                    <li><a href="lesson7.html">Lesson 7</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 
