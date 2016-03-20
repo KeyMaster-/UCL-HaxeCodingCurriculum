@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Lesson 1 | Coding Curriculum</title>
+<title>Lesson 3 | Coding Curriculum</title>
 <link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/prettify.css" type="text/css" rel="stylesheet" />
@@ -40,67 +40,78 @@
 				<p>Let’s talk about giraffes. Let’s say there is an African giraffe named Jerry, and it is a type of giraffe. What are some attributes of Jerry? It has a long neck, 4 legs and a position x and y. It’s yellow in colour. And it also has a name, Jerry. What are some of the things it could do? It could walk. It could bow its head for a drink in the lake. It could pee. </p>   
 				<p>Likewise, in programming, we can create objects that have attributes and functions. These objects need to be instantiated from a Class. A Class holds generic information of the attributes and functions of an object. In our example, AfricanGiraffe is a class, and Jerry is the object.</p>
 				<p>Now, let’s bring Jerry into the programming world. Since Jerry belongs to the Class of African Giraffes, we define a class AfricanGiraffe which has attributes such as name, colour, number of legs, place of birth and neck length. When we do this, we are saying all African Giraffes initiated will have these attributes.</p>
-				<pre class="prettyprint"><code class="language-haxe"> class AfricanGiraffe{	
+				<pre class="prettyprint"><code class="language-haxe">class AfricanGiraffe{	
     var name:String; 
     var colour:String; 
-    var legs:int = 4; 
+    var legs:Int = 4; 
     var neck_length:String = “long”;
-    var hungry:Boolean = true; var x:int, var y:int;
-    var happy:Boolean;
+    var hungry:Bool = true; 
+    var x:Int;
+    var y:Int;
+    var happy:Bool;
     var placeOfBirth:String = “Africa”;
-				</code></pre>
-				<p>Next, we give our African Giraffes the ability to walk. </p>
+}</code></pre>
+				<p>Next, we give our African Giraffes the ability to walk. (All the following code would go right before the closing <code>}</code> from the last block)</p>
 				
-				<pre class="prettyprint"><code class="language-haxe">   public function take_one_step(forward:int, right:int){
-    x = x + forward;
-    y = y + right;
-  }</code></pre>
+				<pre class="prettyprint"><code class="language-haxe">public function take_one_step(right:Int, down:Int){
+    x = x + right;
+    y = y + down;
+}</code></pre>
 
-				<p>Up to now, all we’ve been doing is defining what an African Giraffe is and what it does. To actually create (or instantiate) an African Giraffe, we need to create a constructor. A constructor is a method that tells the computer that a new object of a class is going to be instantiated and that this object should have certain information referenced to its attributes.
-				We write a constructor like how we write a function.</p>
+				<p>Up to now, all we’ve been doing is defining what an African Giraffe is and what it does. To actually create (or instantiate) an African Giraffe, we need to create a constructor. A constructor is a method that tells the computer that a new object of a class is going to be instantiated and that this object should have certain information assigned to its attributes.
+				We write a constructor just like we would write a function, with the restriction that it has to be called <code>new</code>, and that can't return a value! (The returned value is the object we're creating)</p>
 
-				<pre class="prettyprint"><code class="language-haxe">   public function new(_name:String, _colour:String, _happy:Boolean){
+				<pre class="prettyprint"><code class="language-haxe">public function new(_name:String, _colour:String, _happy:Bool) {
     name = _name;
     colour = _colour;
     happy = _happy;
-  }
- }
- 				</code></pre>
+}</code></pre>
 
-				<p>Now, an African Giraffe is actually a type of giraffe. And we know all giraffes have 4 legs and have long necks. Classes can get attributes and methods from other Classes. This is known as <strong>inheritance</strong>. A child object inherits from its parent object. African Giraffe is the child and Giraffe is the parent.</p> 
+				<p>Now, an African Giraffe is actually a type of giraffe. And we know all giraffes have 4 legs and have long necks. Classes can get attributes and methods from other Classes. This is known as <strong>inheritance</strong>. A child object inherits from its parent object. African Giraffe is the child and Giraffe is the parent.
+                (This code would be seperate from our AfricanGiraffe class)</p> 
 
-				<pre class="prettyprint"><code class="language-haxe"> class Giraffe(){
-   var name: String; 
-   var colour: String; 
-   var legs: Int = 4; 
-   var neck_length: String = “long”;
+				<pre class="prettyprint"><code class="language-haxe">class Giraffe {
+    var name: String; 
+    var colour: String; 
+    var legs: Int = 4; 
+    var neck_length: String = “long”;
 
-   public function eat(){
-      if(hungry == true){
-      hungry = false;
-      trace(“Food was good”);
-   }
-   else{
-      trace(“Not hungry so ran away”);
-   } 
-  
-  }</code></pre>
+    public function new() {}
 
-				<p>Let’s make the African Giraffe class inherit Giraffe. We do this by adding the “extends” key word. We can also tailor methods to suit the needs of our classes. We do this by adding the <em>override</em> keyword at the start of defining a function.</p>
+    public function eat() {
+        if(hungry == true){
+            hungry = false;
+            trace(“Food was good”);
+        }
+        else{
+            trace(“Not hungry so ran away”);
+        }
+    }
+}</code></pre>
+                <p>Notice above that, even though we don't want to make an instance of the <code>Giraffe</code> class, we still have to add the constructor function. This is required for all classes!</p>
 
-				<pre class="prettyprint"><code class="language-haxe"> class AfricanGiraffe extends Giraffe{
- //we remove repeated code
+				<p>Let’s make the African Giraffe class inherit Giraffe. We do this by adding the “extends” key word. Doing so will require us to call the constructor of our parent class in our own constructor, using the <code>super</code> keyword, as shown below. We can also tailor methods to suit the needs of our classes. We do this by adding the <em>override</em> keyword at the start of defining a function.</p>
 
- override public function eat(){
-   if(hungry == true){
-     hungry = false;
-     happy = true;
-     trace(“Food was good and ” + this.name+ “ is happy.”);
-   }
-   else{
-     trace(“Not hungry so ran away”);
-   } 
- }</code></pre>
+				<pre class="prettyprint"><code class="language-haxe">class AfricanGiraffe extends Giraffe{
+    //Our new constructor method. Notice the super() call
+    public function new(_name:String, _colour:String, _happy:Bool) {
+        super();
+        name = _name;
+        colour = _colour;
+        happy = _happy;
+    }
+
+    override public function eat(){
+        if(hungry == true){
+            hungry = false;
+            happy = true;
+            trace(“Food was good and ” + this.name+ “ is happy.”);
+        }
+        else{
+            trace(“Not hungry so ran away”);
+        }
+    }
+}</code></pre>
 
 
 				<p>Now that we have our full African Giraffe attributes, methods and constructor, we initialize our African Giraffe Jerry like so:</p>
@@ -112,7 +123,7 @@
 
 				<p><b><hr>Exercise 2</hr></b></p>
 
-				<p>To get started, open file <code>Missile.hx</code>. 
+				<p>To get started, create a file called <code>Missile.hx</code> in the <code>entities</code> folder. 
 				Start by giving the Missile class a player, a speed, a steering_impulese and a velocity. Don't forget to include their types. Hint: steering_impulse is a constant 800 and types can also be of classes! </p>
 
 				<p>Next, let Missile inherit Entity.</p>
