@@ -40,7 +40,7 @@
 
 			<h3>Functions</h3><br>
 
-			<p>Functions are one way to reduce code repetition. Essentially they are blocks of code that are given a name, which can later be run by referencing that name.</p>
+			Functions are one way to reduce code repetition. Essentially they are blocks of code that are given a name, which can later be run by referencing that name.<br><br>
 			Here's a simple example:<br>
 			<pre class="prettyprint"><code class="language-haxe">function sayHello() {
 	trace("Hello");
@@ -59,7 +59,7 @@
 	trace("o \n");
 }</code></pre> 
 
-			<p>This now means our <code>sayHello()</code> function is more useful as it lets us execute 5 lines of trace() calls using just a single command -  <code>sayHello()</code></p>
+			This now means our <code>sayHello()</code> function is more useful as it lets us execute 5 lines of trace() calls using just a single command -  <code>sayHello()</code><br><br>
 
 			<h3>Parameters and Return Values</h3><br>
 
@@ -83,22 +83,22 @@ var someLastName:String = "Doe";
 
 var fullName:String = sayHelloAndReturnFullName(someFirstName, someLastName);</code></pre>
 
-			<p>The function will then print <code> Hello John </code> to the screen and will return a <code>String</code> containing the full name <code>"John Doe"</code>.<br>
-			This full name is then stored in the variable <code>fullName</code>.</p>
+			The function will then print <code> Hello John </code> to the screen and will return a <code>String</code> containing the full name <code>"John Doe"</code>.<br>
+			This full name is then stored in the variable <code>fullName</code>.<br><br>
 
 			<h3>Update Loop</h3><br>
 
-			<p>Most simple games make use of what is known as an update loop or a main game loop.<br>
-			This is essentially a function that is repeatedly called while the game is running. </p>
+			Most simple games make use of what is known as an update loop or a main game loop. <br><br>
+			This is essentially a function that is repeatedly called while the game is running. <br><br>
 
-			<p>The purpose of this loop is to constantly check for certain events such as player movement, enemy movement, collisions between objects in the game as well as redrawing all the objects on the screen. </p>
+			The purpose of this loop is to constantly check for certain events such as player movement, enemy movement, collisions between objects in the game as well as redrawing all the objects on the screen. <br><br>
 
 			The update loop in our game is contained in the <code>Game.hx</code> file on line 13. <br>
 
 			Line 14 deals with clearing the screen, in preparation to redraw all the elements as they have probably changed since the last loop.<br>
 			<pre class="prettyprint"><code class="language-haxe">Framework.vis.clear();</code></pre><br>
 
-			<p>We then update the player position using the <code>update()</code> function defined in <code>Player.hx</code>. This takes a parameter, <code> dt</code>, this represents the Delta Time, something we will come onto shortly.</p>
+			We then update the player position using the <code>update()</code> function defined in <code>Player.hx</code>. This takes a parameter, <code> dt</code>, this represents the Delta Time, something we will come onto shortly.<br><br>
 
 			After we have updated the player, we then draw it to the screen again, as remember we have cleared the screen at this point. This is done using the <code>draw()</code> fucntion defined in <code>Entity.hx</code>.
 
@@ -106,23 +106,15 @@ var fullName:String = sayHelloAndReturnFullName(someFirstName, someLastName);</c
 
 			<h3>Delta Time</h3><br>
 
-			<p>Delta Time simply means the change in time. In the context of our game, it means the time that has elapsed since our game last updated or called its update loop. </p>
+			Delta Time simply means the change in time. In the context of our game, it means the time that has elapsed since our game last updated, or called its update loop. <br><br>
 
-			<p>As the update loop in our game runs as fast as it can, the number of times the loop is called per second depends on how fast our computer is.</p>
-
-			<p>This presents a problem as we are currently changing the position of the player along the x and y axis by a fixed amount for each loop. This means that if you have a faster computer, your player will move more units per second than if you had a slower computer. </p>
-
-			<p>However we can solve this problem using delta time.<br>
-
-			We can relate the change in the players x and y axis position to delta time, therefore making the change independant of how fast your computer is, making the game fairer across different computers.</p>
-
-			<p>As mentioned earlier the <code>update()</code> function for the player entity took a parameter called <code> dt</code>.This keeps track of delta time in our program.</p><br><br>
+			As mentioned earlier the <code>update()</code> function for the player entity took a parameter called <code> dt</code>.This keeps track of delta time in our program.<br><br><br><br>
 
 			<h2>Exercise 2</h2><br>
 
-			<p>In this exercise we will simply be updating the <code>update()</code> function in <code>Player.hx</code> to take into account the <code>dt</code> parameter.</p>
+			In this exercise we will simply be updating the <code>update()</code> function in <code>Player.hx</code> to take into account the <code>dt</code> parameter.<br><br>
 
-			<p>What you need to do is for each <code>Framework.input.keydown()</code> if block, multiply the change in speed by dt.</p><br>
+			What you need to do is for each <code>Framework.input.keydown()</code> if block, multiply the change in speed by dt.<br>
 
 
 		</div>
