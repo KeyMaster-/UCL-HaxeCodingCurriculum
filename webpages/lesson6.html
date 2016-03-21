@@ -14,7 +14,6 @@
 </head>
 <body onload="prettyPrint()">
 <div id="wrapper">
-<<<<<<< HEAD
     <div id="header-wrapper">
         <div id="header" class="container">
             <div id="logo">
@@ -43,36 +42,9 @@
 =======
             At this point we have learned a lot of different concepts related to programming. This lesson will draw on concepts we have learend from lesson 1 related to variables and data types as well as Lesson 2. <br><br>
 >>>>>>> origin/master
-=======
-	<div id="header-wrapper">
-		<div id="header" class="container">
-			<div id="logo">
-				<h1><a href="#">Coding Curriculum</a></h1>
-			</div>
-		</div>
-	</div>
-	<div id="menu-wrapper">
-		<div id="menu" class="container">
-			<ul>
-				<li><a href="index.html">Homepage</a></li>
-				<li class="current_page_item"><a href="#">Lessons</a></li>
-			</ul>
-		</div>
-		<!-- end #menu --> 
-	</div>
-	<div id="page" class="container">
-		<div id="content">
-			<div class="title">
-				<h2>Lesson 6</h2>
-				<span class="byline">Arrays, Loops and Adding Target Objects </span> 
-			</div>
-
-			At this point we have learned a lot of different concepts related to programming. This lesson will draw on concepts we have learend from lesson 1 related to variables and data types as well as Lesson 2. <br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 <h3>Arrays</h3>
 
-<<<<<<< HEAD
 <<<<<<< HEAD
 				<p>Arrays are a convenient way to store multiple values in a single variable. </p>
 				<p>They are defined like this:<br>
@@ -86,27 +58,16 @@
 
                 This declares <code>myArray</code> as a new array that can store values of the <code>String</code> data type.<br><br>
 >>>>>>> origin/master
-=======
-				Arrays are a convenient way to store multiple values in a single variable. <br><br>
-				They are defined like this:<br>
-				<pre class="prettyprint"><code class="language-haxe">var myArray = new Array&ltString>();</code></pre><br><br>
-
-				This declares <code>myArray</code> as a new array that can store values of the <code>String</code> data type.<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 At this point our array contains no values, we can confirm that by using the <code>.length</code> method on the array:<br>
 
                 <pre class="prettyprint"><code class="language-haxe">trace(myArray.length);</code></pre><br>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>This should print <code>0</code> to the screen.</p>
 =======
                 This should print <code>0</code> to the console.<br><br>
 >>>>>>> origin/master
-=======
-				This should print <code>0</code> to the screen.<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 We can add values to the end of our array using the array method <code>push</code>:<br>
 
@@ -118,17 +79,12 @@ myArray.push('goodbye');</code></pre>
 trace(myArray[1]); //prints "goodbye"</code></pre>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>At this point if we visualise the array as a column in an excel spreadsheet, the indexes refer to the row numbers for that column (starting from 0 not 1). </p>
-=======
-				At this point if we visualise the array as a column in an excel spreadsheet, the indexes refer to the row numbers for that column (starting from 0 not 1). <br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
-				Notice we are able to add values to the 9th index position even though nothing was added in between <code>hello</code> and <code>goodbye</code>.<br><br>
+				<p>Notice we are able to add values to the 9th index position even though nothing was added in between <code>hello</code> and <code>goodbye</code>.</p>
 
-				Arrays in Haxe are also dynamic, which means they dont have a fixed sized and can hold as many values as can fit in memory. <br><br>
+				<p>Arrays in Haxe are also dynamic, which means they dont have a fixed sized and can hold as many values as can fit in memory. </p>
 
-<<<<<<< HEAD
 				<p>A full list of Haxe Array methods can be found <a href="http://api.haxe.org/Array.html">here</a>, play around with them to figure out what they do and how you can use them. </p><br>
 =======
                 At this point if we visualise the array as a column in an excel spreadsheet, the indexes refer to the row numbers for that column (starting from 0, not 1!) <br><br>
@@ -139,27 +95,20 @@ trace(myArray[1]); //prints "goodbye"</code></pre>
 
                 <h3>Loops</h3>
 >>>>>>> origin/master
-=======
-				A full list of Haxe Array methods can be found <a href="http://api.haxe.org/Array.html">here</a>, play around with them to figure out what they do and how you can use them. <br><br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 Loops provide a way for us to repeat lines of code without typing them out again and again.<br><br>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>Loops provide a way for us to repeat lines of code without typing them out again and again.</p>
-=======
-				Loops provide a way for us to repeat lines of code without typing them out again and again.<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
-				There are two main ways to loop in Haxe: <code>While Loops</code> and <code>For Loops</code>.  <br><br>
+				<p>There are two main ways to loop in Haxe: <code>While Loops</code> and <code>For Loops</code>.  </p>
 
 				<h4>While Loops</h4><br>
-				While loops work by executing code as long as a condition is true.<br><br>
+				<p>While loops work by executing code as long as a condition is true.</p>
 
-				For example, in english we could say, while we have not yet reached the end of the array, print the next item in the array.<br><br>
+				<p>For example, in english we could say, while we have not yet reached the end of the array, print the next item in the array.</p>
 
-				In code this would look something like this:<br>
+				<p>In code this would look something like this:</p>
 
 				<pre class="prettyprint"><code class="language-haxe">var n = 0;
 =======
@@ -180,7 +129,6 @@ while(n < myArray.length){
 }</code></pre><br>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>Here our condition is within the round brackets: <code> (n < myArray.length) </code> we initially declare this variable <code>n</code> and set it to 0. </p>
 
 				<p>Our code then checks the condition in the while loop and if it is true then it will execute the code in the following curly brackets: <code> trace(myArray[n]); </code>.
@@ -194,14 +142,6 @@ while(n < myArray.length){
                 Our code then checks the condition in the while loop and if it is true then it will execute the code in the following curly brackets: <code> trace(myArray[n]); </code>.
                 <br><br>
                 Once this code has finished executing, the program will again check the condition in the while loop, therefore looping until the condition is false. <br><br>
-=======
-				Here our condition is within the round brackets: <code> (n < myArray.length) </code> we initially declare this variable <code>n</code> and set it to 0. <br><br>
-				Our code then checks the condition in the while loop and if it is true then it will execute the code in the following curly brackets: <code> trace(myArray[n]); </code>.
-				<br><br>
-				Once this code has finished executing, the program will again check the condition in the while loop, therefore looping until the condition is false. <br><br>
-
-				<i>Note: This means that there is a chance that the code inside the curly brackets may never actually execute as the condition may be always false. </i><br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 <i>Note: This means that there is a chance that the code inside the curly brackets may never actually execute as the condition may be always false. </i><br>
 >>>>>>> origin/master
@@ -214,7 +154,6 @@ do {
     trace(myArray[n]);
 } while(n < myArray.length);</code></pre>
 
-<<<<<<< HEAD
                 <h4>For Loops</h4>
 
 <<<<<<< HEAD
@@ -226,11 +165,6 @@ do {
 
                 These loops, instead of looping based on a condition, loop for a set number of times. <br><br>
 >>>>>>> origin/master
-=======
-				For loops work differently to while and do-while loops however.<br><br>
-
-				These loops, instead of looping based on a condition, loop for a set number of times. <br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 For example, if we were to print each item in our array using a for loop instead of a while loop it would look something like this:
 
@@ -239,14 +173,10 @@ do {
 }</code></pre><br>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>This code iterates through elements in the array and prints each one, therefore only looping a number of times equal to the length of the array.</p>
 =======
                 This code iterates through elements in the array and prints each one, therefore only looping a number of times equal to the length of the array.<br><br>
 >>>>>>> origin/master
-=======
-				This code iterates through elements in the array and prints each one, therefore only looping a number of times equal to the length of the array.<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 Another way we could use the for loop is like this:
                 <pre class="prettyprint"><code class="language-haxe">for(index in 0...myArray.length){
@@ -254,32 +184,23 @@ do {
 }</code></pre><br>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>This method iterates through a range of numbers between 0 and the length of our array, then prints the item at that index.</p>
 =======
                 This method iterates through a range of numbers between 0 and the length of our array, though not including the value <code>myArray.length</code> itself, then prints the item at that index.<br><br>
 >>>>>>> origin/master
-=======
-				This method iterates through a range of numbers between 0 and the length of our array, then prints the item at that index.<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 <h2>Exercise 6</h2><br>
 
                 <h3>Adding Target Objects</h3>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>For this exercise, we will need to work with a new object - the <code> Target</code> object.</p>
-=======
-				For this exercise, we will need to work with a new object - the <code> Target</code> object.<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
-				Firstly, create a new class file in the <code>entities</code> folder and name it <code>Target.hx</code>. <br><br>
+				<p>Firstly, create a new class file in the <code>entities</code> folder and name it <code>Target.hx</code>. </p>
 
-				Have the Target extend the Entity class and write a constructor method for this class.
-				<i> (Refer to Lesson 3 if you forgot how to do this.)</i><br><br>
+				<p>Have the Target extend the Entity class and write a constructor method for this class.
+				<i> (Refer to Lesson 3 if you forgot how to do this.)</i></p>
 
-<<<<<<< HEAD
 				<p>This object will now represent the target in our game that we have to try and hit to score points. </p><br>
 =======
                 For this exercise, we will need to work with a new object - the <code> Target</code> object.<br><br>
@@ -291,21 +212,14 @@ do {
 
                 This object will now represent the target in our game that we have to try and hit to score points. <br><br><br>
 >>>>>>> origin/master
-=======
-				This object will now represent the target in our game that we have to try and hit to score points. <br><br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 <h3>Updating our Update</h3>
 
-<<<<<<< HEAD
 <<<<<<< HEAD
 				<p>Next, we need to make some additions to our <code>Game.hx</code> file.</p><br>
 =======
                 Next, we need to make some additions to our <code>Game.hx</code> file.<br><br>
 >>>>>>> origin/master
-=======
-				Next, we need to make some additions to our <code>Game.hx</code> file.<br><br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 <li>Create an array that stores values of the Target data-type.</li><br>
                 <li>In the update function, iterate over all target objects in this array</li><br>
@@ -316,32 +230,22 @@ do {
                 <h3>Reposition Those Targets</h3>
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 				<p>Now we need to add our <code> repositionTarget(target) </code> function.<br>
 				This small function serves to easily reposition the target to a random location on the screen.</p>
-=======
-				Now we need to add our <code> repositionTarget(target) </code> function.<br>
-				This small function serves to easily reposition the target to a random location on the screen.<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
-				Using our knowledge of functions from Lesson 2, create a function <code>repositionTarget()</code> that takes a single parameter of type <code>Target</code>.<br><br>
+				<p>Using our knowledge of functions from Lesson 2, create a function <code>repositionTarget()</code> that takes a single parameter of type <code>Target</code>.</p>
 
-				Then change the <code>x</code> and <code>y</code> values of this object to random values within the bounds of our screen.<br><br>
+				<p>Then change the <code>x</code> and <code>y</code> values of this object to random values within the bounds of our screen.</p>
 
-				<i>Hint: Use Math.random() to generate a random number</i><br><br>
+				<i>Hint: Use Math.random() to generate a random number</i></p>
 
-<<<<<<< HEAD
 				<p>Also take into consideration the possibility of randomly repositioning our target to the same position our player object is in, this will automatically kill the player!</p>
 =======
                 Now we need to add our <code> repositionTarget(target) </code> function.<br>
                 This small function serves to easily reposition the target to a random location on the screen.<br><br>
-=======
-				Also take into consideration the possibility of randomly repositioning our target to the same position our player object is in, this will automatically kill the player!<br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
                 Using our knowledge of functions from Lesson 2, create a function <code>repositionTarget()</code> that takes a single parameter of type <code>Target</code>.<br><br>
 
-<<<<<<< HEAD
                 Then change the <code>x</code> and <code>y</code> values of this object to random values within the bounds of our screen.<br><br>
 
                 <i>Hint: Use Math.random() to generate a random number between 0 and 1</i><br><br>
@@ -353,17 +257,13 @@ do {
 
 <<<<<<< HEAD
 				<p>At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. </p>
-=======
-				At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. <br><br>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 
-				Now we need a way to reset the targets when the player wants to play again.<br><br>
+				<p>Now we need a way to reset the targets when the player wants to play again.</p>
 
-				In our <code>reset()</code> function in <code>Game.hx</code> move all the player related reset code to a new function and call it <code>resetPlayer()</code>.<br><br>
+				<p>In our <code>reset()</code> function in <code>Game.hx</code> move all the player related reset code to a new function and call it <code>resetPlayer()</code>.</p>
 
-				Then put a call to this function at the beginning of our <code>reset()</code> function.<br><br>
+				<p>Then put a call to this function at the beginning of our <code>reset()</code> function.</p>
 
-<<<<<<< HEAD
 				<p>Now we need to write the code to reset our targets after resetting the player.</p>
 =======
                 At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. <br><br>
@@ -405,38 +305,6 @@ do {
             </div>
         </div>
     </div>
-=======
-				Now we need to write the code to reset our targets after resetting the player.<br><br>
-
-				The code should achieve the following:<br><br><i>
-				<li>Destroy all current targets if there are some still active</li><br>
-				<li>Reset the targets Array to an empty array</li><br>
-				<li>Create a new target object</li><br>
-				<li>Reposition that object</li><br>
-				<li>Add that object to our array of targets</li><br><br><br></i>
-
-				Congratulations you have now added targets to our game!
-
-		</div>
-		<div id="sidebar">
-			<div class="box2">
-				<div class="title">
-					<h2>Lesson navigation</h2>
-				</div>
-				<ul class="style2">
-					<li><a href="lesson0.html">Lesson 0</a></li>
-					<li><a href="lesson1.html">Lesson 1</a></li>
-					<li><a href="lesson2.html">Lesson 2</a></li>
-					<li><a href="lesson3.html">Lesson 3</a></li>
-					<li><a href="lesson4.html">Lesson 4</a></li>
-					<li><a href="lesson5.html">Lesson 5</a></li>
-					<li><a href="lesson6.html">Lesson 6</a></li>
-					<li><a href="lesson7.html">Lesson 7</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
->>>>>>> parent of de98d4b... Added more delta time info, replaced<br> tags with <p>
 </div>
 
 
