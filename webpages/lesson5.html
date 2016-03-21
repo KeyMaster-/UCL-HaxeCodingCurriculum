@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Lesson 1 | Coding Curriculum</title>
+<title>Lesson 5 | Coding Curriculum</title>
 <link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 <link href="css/prettify.css" type="text/css" rel="stylesheet" />
@@ -40,16 +40,16 @@
 			<p><b>Collision</b></p>
 			<p>Put yourself in the shoes of the screen. When will you consider 2 objects have collided? It is when the 2 objects overlap. In other words, if 2 objects share the same pixel on the screen, they are colliding.</p>
 			<p><b>Reset</b></p>
-			<p>When a game is set to reset, the player’s rectangle should be in the middle of the screen, and the missile should start at the top and be one third of the width.</p>
+			<p>Every time we reset the game, we want the player to start at the same position. A nice and visible place for that is the center of the screen, which you can calculate using the <code>Framework.vis.canvas_width</code> and <code>Framework.vis.canvas_height</code> variables. The missile should also start at a consistent place, but not on top of the player, since then they would instantly die! Instead, we'll place the missile above and to the left of the player, say, a third of the screen width away from the left border.</p>
 			<p><b>Game Over</b></p>
 			<p>We want to continually check whether the game has ended. And if the game has ended, we want to display a message that says “ GAME OVER” then asks the user to hit enter to play again. </p>
 			<p><b>Exercise 5</b></p>
 			<p>Firstly, open up the file <code>Game.hx</code>.<p>
-			<p>To end the game, we need to have a type of variable that can hold only 2 values. Can you think of any? Add this attribute to the Game class. Set it so that the game is NOT over.</p>
+			<p>To end the game, we need to have a type of variable that can only be true or false. Can you think of any? Add this attribute to the Game class. Set it so that the game is NOT over.</p>
 			<p>Next, create a reset function that resets the game. It should not take in or return any parameters! </p>
 			<p>Next, we will be working in <code>public function update(dt:Float)</code>. Firstly at the bottom of the function (after <code>missile.draw()</code> but before curly closing braces), add an if statement to check if the player and missile had collided. If so, set the earlier “game over” attribute so that it indicates the game is over.</p> 
 			<p>Next, after <code>Framework.vis.clear();</code>, add another if statement that checks whether the game is over, and if so, displays a game over message and asks the player to hit enter to restart. Lastly, add an if statement in this if statement, that calls <code>reset()</code> if enter was pressed. </p>
-			<p>Hint: use <code>Framework.vis.text</code> to display an alert box. Google what the parameters are! <br>
+			<p>Hint: use <code>Framework.vis.text</code> to display text on the screen. This function can be found in the file <code>systems/Vis.hx</code>, so look there to see what the parameters to it are!<br>
 			Double Hint:   The key code for ENTER is 13!</p> 
 
 				
