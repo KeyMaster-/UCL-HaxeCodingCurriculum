@@ -40,9 +40,6 @@
 
 			<p>At this point we have learned a lot of different concepts related to programming. This lesson will draw on concepts we have learend from lesson 1 related to variables and data types as well as Lesson 2. </p>
 
-            At this point we have learned a lot of different concepts related to programming. This lesson will draw on concepts we have learend from lesson 1 related to variables and data types as well as Lesson 2. <br><br>
-
-
                 <h3>Arrays</h3>
 
 				<p>Arrays are a convenient way to store multiple values in a single variable. </p>
@@ -51,21 +48,11 @@
 
 				<p>This declares <code>myArray</code> as a new array that can store values of the <code>String</code> data type.</p>
 
-                Arrays are a convenient way to store multiple values in a single variable. <br><br>
-                They are created like this:<br>
-                <pre class="prettyprint"><code class="language-haxe">var myArray = new Array&ltString>();</code></pre><br><br>
-
-                This declares <code>myArray</code> as a new array that can store values of the <code>String</code> data type.<br><br>
-
                 At this point our array contains no values, we can confirm that by using the <code>.length</code> method on the array:<br>
 
                 <pre class="prettyprint"><code class="language-haxe">trace(myArray.length);</code></pre><br>
 
-
 				<p>This should print <code>0</code> to the screen.</p>
-
-                This should print <code>0</code> to the console.<br><br>
-
 
                 We can add values to the end of our array using the array method <code>push</code>:<br>
 
@@ -84,36 +71,19 @@ trace(myArray[1]); //prints "goodbye"</code></pre>
 				<p>Arrays in Haxe are also dynamic, which means they dont have a fixed sized and can hold as many values as can fit in memory. </p>
 
 				<p>A full list of Haxe Array methods can be found <a href="http://api.haxe.org/Array.html">here</a>, play around with them to figure out what they do and how you can use them. </p><br>
+                
 
-                At this point if we visualise the array as a column in an excel spreadsheet, the indexes refer to the row numbers for that column (starting from 0, not 1!) <br><br>
-
-                Arrays in Haxe are also dynamic, which means they dont have a fixed sized and can hold as many values as can fit in memory. <br><br>
-
-                A full list of Haxe Array methods can be found <a href="http://api.haxe.org/Array.html">here</a>, play around with them to figure out what they do and how you can use them. <br><br>
-
-                <h3>Loops</h3>
-
-                Loops provide a way for us to repeat lines of code without typing them out again and again.<br><br>
+                <h3>Loops</h3>                
 
 				<p>Loops provide a way for us to repeat lines of code without typing them out again and again.</p>
-
-				<p>There are two main ways to loop in Haxe: <code>While Loops</code> and <code>For Loops</code>.  </p>
-
-				<h4>While Loops</h4><br>
-				<p>While loops work by executing code as long as a condition is true.</p>
-
-				<p>For example, in english we could say, while we have not yet reached the end of the array, print the next item in the array.</p>
-
-				<p>In code this would look something like this:</p>
-
-				<pre class="prettyprint"><code class="language-haxe">var n = 0;
 
                 There are two main ways to loop in Haxe: <code>while</code> loops and <code>for</code> loop.  <br>
 
                 <h4>While Loops</h4>
-                While loops work by executing code as long as a condition is true.<br><br>
 
-                For example, in english we could say, while we have not yet reached the end of the array, print the next item in the array.<br><br>
+                <p>While loops work by executing code as long as a condition is true.</p>
+
+                <p>For example, in english we could say, while we have not yet reached the end of the array, print the next item in the array.</p>
 
                 In code this would look something like this:<br>
 
@@ -133,13 +103,6 @@ while(n < myArray.length){
 
 				<p><i>Note: This means that there is a chance that the code inside the curly brackets may never actually execute as the condition may be always false. </i></p>
 
-                Here our condition is within the round brackets: <code> (n < myArray.length) </code> we initially declare this variable <code>n</code> and set it to 0. <br><br>
-                Our code then checks the condition in the while loop and if it is true then it will execute the code in the following curly brackets: <code> trace(myArray[n]); </code>.
-                <br><br>
-                Once this code has finished executing, the program will again check the condition in the while loop, therefore looping until the condition is false. <br><br>
-
-                <i>Note: This means that there is a chance that the code inside the curly brackets may never actually execute as the condition may be always false. </i><br>
-
 
                 <h4>Do-While Loops</h4>
 
@@ -156,11 +119,6 @@ do {
 
 				<p>These loops, instead of looping based on a condition, loop for a set number of times. </p>
 
-                For loops work differently to while and do-while loops however.<br><br>
-
-                These loops, instead of looping based on a condition, loop for a set number of times. <br><br>
-
-
                 For example, if we were to print each item in our array using a for loop instead of a while loop it would look something like this:
 
                 <pre class="prettyprint"><code class="language-haxe">for(value in myArray){
@@ -170,9 +128,6 @@ do {
 
 				<p>This code iterates through elements in the array and prints each one, therefore only looping a number of times equal to the length of the array.</p>
 
-                This code iterates through elements in the array and prints each one, therefore only looping a number of times equal to the length of the array.<br><br>
-
-
                 Another way we could use the for loop is like this:
                 <pre class="prettyprint"><code class="language-haxe">for(index in 0...myArray.length){
     trace(myArray[index]);
@@ -180,8 +135,6 @@ do {
 
 
 				<p>This method iterates through a range of numbers between 0 and the length of our array, then prints the item at that index.</p>
-
-                This method iterates through a range of numbers between 0 and the length of our array, though not including the value <code>myArray.length</code> itself, then prints the item at that index.<br><br>
 
                 <h2>Exercise 6</h2><br>
 
@@ -197,22 +150,11 @@ do {
 
 				<p>This object will now represent the target in our game that we have to try and hit to score points. </p><br>
 
-                For this exercise, we will need to work with a new object - the <code> Target</code> object.<br><br>
-
-                Firstly, create a new class file in the <code>entities</code> folder and name it <code>Target.hx</code>. <br><br>
-
-                Have the Target extend the Entity class and write a constructor method for this class.
-                <i> (Refer to Lesson 3 if you forgot how to do this.)</i><br><br>
-
-                This object will now represent the target in our game that we have to try and hit to score points. <br><br><br>
-
 
                 <h3>Updating our Update</h3>
 
 
 				<p>Next, we need to make some additions to our <code>Game.hx</code> file.</p><br>
-
-                Next, we need to make some additions to our <code>Game.hx</code> file.<br><br>
 
                 <li>Create an array that stores values of the Target data-type.</li><br>
                 <li>In the update function, iterate over all target objects in this array</li><br>
@@ -232,18 +174,6 @@ do {
 				<i>Hint: Use Math.random() to generate a random number</i></p>
 
 				<p>Also take into consideration the possibility of randomly repositioning our target to the same position our player object is in, this will automatically kill the player!</p>
-
-                Now we need to add our <code> repositionTarget(target) </code> function.<br>
-                This small function serves to easily reposition the target to a random location on the screen.<br><br>
-
-                Using our knowledge of functions from Lesson 2, create a function <code>repositionTarget()</code> that takes a single parameter of type <code>Target</code>.<br><br>
-
-                Then change the <code>x</code> and <code>y</code> values of this object to random values within the bounds of our screen.<br><br>
-
-                <i>Hint: Use Math.random() to generate a random number between 0 and 1</i><br><br>
-
-                Also take into consideration the possibility of randomly repositioning our target to the same position our player object is in, this will automatically kill the player!<br><br>
-
                 <h3>Clean Up</h3>
 
 				<p>At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. </p>
@@ -255,17 +185,6 @@ do {
 				<p>Then put a call to this function at the beginning of our <code>reset()</code> function.</p>
 
 				<p>Now we need to write the code to reset our targets after resetting the player.</p>
-
-                At this stage we have a new object, a way to check if that object overlaps with any other object, some code to deal with what happens in that case and a function to reposition the target. <br><br>
-
-                Now we need a way to reset the targets when the player wants to play again.<br><br>
-
-                In our <code>reset()</code> function in <code>Game.hx</code> move all the player related reset code to a new function and call it <code>resetPlayer()</code>.<br><br>
-
-                Then put a call to this function at the beginning of our <code>reset()</code> function.<br><br>
-
-                Now we need to write the code to reset our targets after resetting the player.<br><br>
-
 
                 The code should achieve the following:<br><br><i>
                 <li>Destroy all current targets if there are some still active</li><br>
