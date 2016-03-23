@@ -52,10 +52,7 @@
 
 
 			<h2>Exercise 4</h2><br />
-			<p>In the file <code>Player.hx</code>, find the code that moves the player, which looks like this: 
-			<pre class=prettyprint><code class=language-haxe>rect.move(move.x, move.y);</code></pre>
-			Above it, insert code that sets the <code>length</code> property of the <code>Vector move</code> to the appropriate value based on the player's speed and the time between each frame, to make sure that diagonal movements are at the same speed.
-			</p>
+			<p>In the file <code>Player.hx</code>, find the code that moves the player. Modify this to use a vector and <code>rect.move(x, y)</code> instead of directly adding to the player's position with each keypress. More explicitly, this can be achieved by declaring a new vector, modifying the vector's <code>x</code> and <code>y</code> properties based on keypresses, then adjusting the vector's length to the appropriate value, and finally moving the rectangle using the vector.</p>
 			<br />
 			<p>In the file <code>Missile.hx</code>, implement code which makes the missile follow the player.
 
