@@ -48,8 +48,17 @@
 					</li>
 				</ul>
 				
-				To intall all of this, go to <a href="http://haxe.org/download/" target="_blank">http://haxe.org/download/</a> and download the binary for the platform you're on from the top of the page. Run the installer you downloaded and accept all the defaults given.<br><br>
-				Now, open a terminal and type <code>haxe -version</code>. You should see a version number show up, the same as written at the top of the haxe download page.<br><br>
+				<p>To intall all of this, go to <a href="http://haxe.org/download/" target="_blank">http://haxe.org/download/</a> and download the binary for the platform you're on from the top of the page. Run the installer you downloaded and accept all the defaults given.</p>
+
+				<p>Now, open a terminal on your computer. <br>
+				On windows, press the Windows Key and R, then type <code>cmd</code>, which brings up the text terminal.<br>
+				On Mac, press cmd and space to bring up spotlight, then type <code>terminal</code> to open a terminal window.<br>
+				Once you got the window open and navigate to the <code>game</code> folder that comes with this tutorial. If you're not familiar with how to navigate using the terminal, here's a quick explanation: On the left side of your cursor, you will see the current directory you are in displayed, for example <code>C:\Windows</code> or <code>Your-Username:~</code>. <br><br>
+				Use the <code>cd</code> command to <b>c</b>hange <b>d</b>irectory, but typing "<code>cd path/to/go/to</code>" (without the quotation marks), where "path/to/go/to" is the path to a folder you want to navigate to. For example, if you were in your documents folder, and had a folder named "games" in it, you would use "<code>cd games</code>" to move into that folder. To check what files and folders exist in the folder you are currently in, you can use the <code>dir</code> command on windows, or the <code>ls</code> command on Mac.<br><br>
+				Once you have managed to the game folder, run the command "<code>haxe build.hxml</code>". This command will tell the haxe compiler to execute the instructions written in the file "build.hxml", which we have configured to compile the game code you will be writing into the game. After running this command, you should see a "build" folder in the game folder, containing a file called "index.html" and a file called "main.js". If you double-click the index.html file, it should open in your browser and display the game as it exists now - A grey background with a green square in the middle. Don't worry though, you'll change that soon!<br><br>
+				Once you start changing the code in the following lessons, use the command <code>haxe build.hxml</code> to re-compile your changed code - this means that any changes you have made will take effect in the actual game you can play in your browser. While doing so, the haxe compiler also checks for errors in your code that prevent it from being compiled, so expect this to happen! Luckily however, the compiler will tell you the file and line number in which an error occured, so you can then go in and fix it!
+				</p> <br>
+
 				If all of this is working correctly, you can move on to <a href="lesson1.html">Lesson 1</a>!
 			</p>
 
